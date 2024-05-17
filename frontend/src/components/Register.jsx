@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -16,11 +16,17 @@ const Register = () => {
     const [lastName, setLastName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [confirmPassword, setConfirmPassword] = useState();
     const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match. Please try again.");
+            return;
+        }
+
         axios.post('http://localhost:3001/register', { firstName, lastName, email, password })
             .then(result => {
                 console.log(result);
@@ -134,8 +140,9 @@ const Register = () => {
                                         name="confirm-password"
                                         label="Confirm Password"
                                         type="password"
-                                        id="password"
+                                        id="confirmPassword"
                                         autoComplete="new-password"
+                                        onChange={(event) => setConfirmPassword(event.target.value)}
                                     />
                                 </Grid>
                             </Grid>
