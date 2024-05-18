@@ -6,6 +6,6 @@ const FormDataSchema = new mongoose.Schema({
     password: String
 })
 
-const FormDataModel = mongoose.model('Profiling_Data', FormDataSchema);
+const FormDataModel = mongoose.model('Profile', FormDataSchema);
 
 module.exports = FormDataModel;

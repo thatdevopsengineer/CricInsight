@@ -1,4 +1,3 @@
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -10,40 +9,108 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import validator from 'validator';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const Register = () => {
-    const [firstName, setFirstName] = useState();
-    const [lastName, setLastName] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-    const [confirmPassword, setConfirmPassword] = useState();
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [errors, setErrors] = useState({});
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
+
+    const handleFieldChange = (field, value) => {
+        switch (field) {
+            case 'firstName':
+                setFirstName(value);
+                setErrors({ ...errors, firstName: '' });
+                break;
+            case 'lastName':
+                setLastName(value);
+                setErrors({ ...errors, lastName: '' });
+                break;
+            case 'email':
+                setEmail(value);
+                setErrors({ ...errors, email: '' });
+                break;
+            case 'password':
+                setPassword(value);
+                setErrors({ ...errors, password: '' });
+                break;
+            case 'confirmPassword':
+                setConfirmPassword(value);
+                setErrors({ ...errors, confirmPassword: '' });
+                break;
+            default:
+                break;
+        }
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        let validationErrors = {};
+
+        if (!validator.isAlpha(firstName)) {
+            validationErrors.firstName = 'First name should contain only alphabets.';
+        }
+
+        if (!validator.isAlpha(lastName)) {
+            validationErrors.lastName = 'Last name should contain only alphabets.';
+        }
+
+        if (!validator.isEmail(email)) {
+            validationErrors.email = 'Invalid email format.';
+        }
+
+        if (!validator.isLength(password, { min: 8 })) {
+            validationErrors.password = 'Passwords must have at least 8 characters.';
+        }
+
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[$]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            validationErrors.password = 'Password must have at least one uppercase letter, one number, and the special symbol $.';
+        }
 
         if (password !== confirmPassword) {
-            alert("Passwords do not match. Please try again.");
+            validationErrors.confirmPassword = "Passwords do not match. Please try again.";
+        }
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
             return;
         }
 
         axios.post('http://localhost:3001/register', { firstName, lastName, email, password })
             .then(result => {
-                console.log(result);
                 if (result.data === "Already registered") {
-                    alert("E-mail already registered! Please Login to proceed.");
-                    navigate('/login');
+                    toast.warning("E-mail already registered! Please Login to proceed.");
                 } else {
-                    alert("Registered successfully! Please Login to proceed.")
-                    navigate('/login');
+                    toast.success("Registered successfully!", {
+                        onClick: () => navigate('/login')
+                    });
+                    setTimeout(() => {
+                        navigate('/login');
+                    }, 4000);
                 }
-
+                // Clear errors after successful submission
+                setErrors({});
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                toast.error("An error occurred. Please try again.");
+            });
     }
 
     return (
         <div>
+            <ToastContainer />
             <Grid
                 container
                 component="main"
@@ -96,7 +163,10 @@ const Register = () => {
                                         id="firstName"
                                         label="First Name"
                                         autoFocus
-                                        onChange={(event) => setFirstName(event.target.value)}
+                                        value={firstName}
+                                        onChange={(event) => handleFieldChange('firstName', event.target.value)}
+                                        error={!!errors.firstName}
+                                        helperText={errors.firstName}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -107,7 +177,10 @@ const Register = () => {
                                         label="Last Name"
                                         name="lastName"
                                         autoComplete="family-name"
-                                        onChange={(event) => setLastName(event.target.value)}
+                                        value={lastName}
+                                        onChange={(event) => handleFieldChange('lastName', event.target.value)}
+                                        error={!!errors.lastName}
+                                        helperText={errors.lastName}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -118,7 +191,10 @@ const Register = () => {
                                         label="Email Address"
                                         name="email"
                                         autoComplete="email"
-                                        onChange={(event) => setEmail(event.target.value)}
+                                        value={email}
+                                        onChange={(event) => handleFieldChange('email', event.target.value)}
+                                        error={!!errors.email}
+                                        helperText={errors.email}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -127,10 +203,26 @@ const Register = () => {
                                         fullWidth
                                         name="password"
                                         label="Password"
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         id="password"
-                                        onChange={(event) => setPassword(event.target.value)}
+                                        value={password}
+                                        onChange={(event) => handleFieldChange('password', event.target.value)}
                                         autoComplete="new-password"
+                                        error={!!errors.password}
+                                        helperText={errors.password}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                        onMouseDown={(event) => event.preventDefault()}
+                                                        edge="end"
+                                                    >
+                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -139,12 +231,29 @@ const Register = () => {
                                         fullWidth
                                         name="confirm-password"
                                         label="Confirm Password"
-                                        type="password"
+                                        type={showConfirmPassword ? 'text' : 'password'}
                                         id="confirmPassword"
                                         autoComplete="new-password"
-                                        onChange={(event) => setConfirmPassword(event.target.value)}
+                                        value={confirmPassword}
+                                        onChange={(event) => handleFieldChange('confirmPassword', event.target.value)}
+                                        error={!!errors.confirmPassword}
+                                        helperText={errors.confirmPassword}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                                        onMouseDown={(event) => event.preventDefault()}
+                                                        edge="end"
+                                                    >
+                                                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                     />
                                 </Grid>
+                                
                             </Grid>
                             <Button
                                 type="submit"
@@ -192,4 +301,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default Register;
