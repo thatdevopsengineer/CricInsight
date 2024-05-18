@@ -13,10 +13,17 @@ import Typography from "@mui/material/Typography";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
+
 const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -121,7 +128,7 @@ const Login = () => {
                 onChange={(event) => setEmail(event.target.value)}
                 sx={{ my: 2 }}
               />
-              <TextField
+              {/* <TextField
                 required
                 fullWidth
                 name="password"
@@ -130,8 +137,31 @@ const Login = () => {
                 id="password"
                 onChange={(event) => setPassword(event.target.value)}
                 autoComplete="new-password"
-              />
+              /> */}
 
+                  <TextField
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    onChange={(event) => setPassword(event.target.value)}
+                    autoComplete="new-password"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)}
+                            onMouseDown={(event) => event.preventDefault()}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
               <Button
                 type="submit"
                 fullWidth
