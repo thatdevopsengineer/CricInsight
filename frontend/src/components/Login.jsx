@@ -25,7 +25,7 @@ const Login = () => {
             if(result.data === "Success"){
                 console.log("Login Success");
                 alert('Login successful!')
-                navigate('/home');
+                navigate('/dashboard');
             }
             else{
                 alert('Incorrect credentials! Please try again.');
