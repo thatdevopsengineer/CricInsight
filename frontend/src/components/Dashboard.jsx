@@ -17,11 +17,8 @@ import ShareIcon from "@mui/icons-material/Share";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { mainListItems, secondaryListItems } from "./listItems";
-import Chart from "./Chart";
-import Deposits from "./Deposits";
-import Orders from "./Orders";
 import { Link } from "@mui/material";
-import Visualization from './Visualization'; // Import the new component
+import Visualization from './Visualization';
 
 const drawerWidth = 240;
 
@@ -157,9 +154,9 @@ export default function Dashboard() {
               variant="h6"
               color="inherit"
               noWrap
-              sx={{ flexGrow: 1 }}
+              sx={{ flexGrow: 1 , fontWeight: 'bold', fontFamily: "Poppins, sans-serif",}}
             >
-              Dashboard
+              Overview
             </Typography>
             <IconButton>
               <ShareIcon sx={{ color: theme.palette.text.primary, mx: 1 }} />
@@ -213,7 +210,7 @@ export default function Dashboard() {
           </List>
           <Divider />
           
-          <Link href='/login' color="inherit" underline="none" sx={{ mt: "auto"}}>
+          <Link href='/' color="inherit" underline="none" sx={{ mt: "auto"}}>
             {secondaryListItems}
           </Link>
         </Drawer>
