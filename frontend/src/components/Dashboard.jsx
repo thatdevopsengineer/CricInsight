@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -17,8 +17,8 @@ import ShareIcon from "@mui/icons-material/Share";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { mainListItems, secondaryListItems } from "./listItems";
-import { Link } from "@mui/material";
-import Visualization from './Visualization';
+import Visualization from "./Visualization";
+import VideoInsight from "./VideoInsight";
 
 const drawerWidth = 240;
 
@@ -111,8 +111,10 @@ const darkTheme = createTheme({
 });
 
 export default function Dashboard() {
-  const [open, setOpen] = React.useState(true);
-  const [darkMode, setDarkMode] = React.useState(false);
+  const [open, setOpen] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+  const [selectedComponent, setSelectedComponent] = useState("Visualization");
+
   const theme = darkMode ? darkTheme : lightTheme;
 
   const toggleDrawer = () => {
@@ -123,9 +125,19 @@ export default function Dashboard() {
     setDarkMode(!darkMode);
   };
 
+  const handleMenuClick = (component) => {
+    setSelectedComponent(component);
+  };
+
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex", backgroundColor: theme.palette.background.default, marginTop: 7 }}>
+      <Box
+        sx={{
+          display: "flex",
+          backgroundColor: theme.palette.background.default,
+          marginTop: 7,
+        }}
+      >
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
@@ -154,7 +166,11 @@ export default function Dashboard() {
               variant="h6"
               color="inherit"
               noWrap
-              sx={{ flexGrow: 1 , fontWeight: 'bold', fontFamily: "Poppins, sans-serif",}}
+              sx={{
+                flexGrow: 1,
+                fontWeight: "bold",
+                fontFamily: "Poppins, sans-serif",
+              }}
             >
               Overview
             </Typography>
@@ -163,14 +179,18 @@ export default function Dashboard() {
             </IconButton>
             <IconButton onClick={toggleTheme}>
               {darkMode ? (
-                <LightModeIcon sx={{ color: theme.palette.text.primary, mx: 1 }} />
+                <LightModeIcon
+                  sx={{ color: theme.palette.text.primary, mx: 1 }}
+                />
               ) : (
-                <DarkModeIcon sx={{ color: theme.palette.text.primary, mx: 1 }} />
+                <DarkModeIcon
+                  sx={{ color: theme.palette.text.primary, mx: 1 }}
+                />
               )}
             </IconButton>
           </Toolbar>
         </AppBar>
-        
+
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -206,29 +226,27 @@ export default function Dashboard() {
           </Toolbar>
           <Divider />
           <List component="nav" sx={{ flexGrow: 1 }}>
-            {mainListItems}
+            {mainListItems(handleMenuClick, selectedComponent)}
           </List>
           <Divider />
-          
-          <Link href='/' color="inherit" underline="none" sx={{ mt: "auto"}}>
-            {secondaryListItems}
-          </Link>
+          <List>{secondaryListItems}</List>
         </Drawer>
+
         <Box
           component="main"
           sx={{
-            backgroundColor: theme.palette.background.default,
             flexGrow: 1,
             height: "100vh",
             overflow: "auto",
-            color: theme.palette.text.primary,
+            backgroundColor: theme.palette.background.default,
+            padding: 3,
           }}
         >
-          <Toolbar />
-          <Container maxWidth="lg">
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Visualization /> {/* Add Visualization component here */}
+                {selectedComponent === "Visualization" && <Visualization />}
+                {selectedComponent === "VideoInsight" && <VideoInsight />}
               </Grid>
             </Grid>
           </Container>

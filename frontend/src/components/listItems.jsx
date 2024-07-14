@@ -1,32 +1,47 @@
-import * as React from 'react';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import LayersIcon from '@mui/icons-material/Layers';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import PersonIcon from '@mui/icons-material/Person';
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import AutoGraphIcon from '@mui/icons-material/AutoGraph';
-import SportsCricketIcon from '@mui/icons-material/SportsCricket';
-import PsychologyIcon from '@mui/icons-material/Psychology';
-import LogoutIcon from '@mui/icons-material/Logout';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-export const mainListItems = (
+import * as React from "react";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import AutoGraphIcon from "@mui/icons-material/AutoGraph";
+import SportsCricketIcon from "@mui/icons-material/SportsCricket";
+import PsychologyIcon from "@mui/icons-material/Psychology";
+import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
+
+export const mainListItems = (handleMenuClick, selectedComponent) => (
   <React.Fragment>
-    <ListItemButton>
+    <ListItemButton
+      onClick={() => handleMenuClick("VideoInsight")}
+      sx={{
+        backgroundColor:
+          selectedComponent === "VideoInsight" ? "#030947" : "inherit",
+        color: selectedComponent === "VideoInsight" ? "white" : "inherit",
+      }}
+    >
       <ListItemIcon>
-        <UploadFileIcon />
+        <UploadFileIcon
+          sx={{
+            color: selectedComponent === "VideoInsight" ? "white" : "inherit",
+          }}
+        />
       </ListItemIcon>
       <ListItemText primary="Upload Videos" />
     </ListItemButton>
-    <ListItemButton sx={{backgroundColor: '#030947', color: 'white'}}>
-      <ListItemIcon >
-        <AutoGraphIcon  sx={{color: 'white'}}/>
+    <ListItemButton
+      onClick={() => handleMenuClick("Visualization")}
+      sx={{
+        backgroundColor:
+          selectedComponent === "Visualization" ? "#030947" : "inherit",
+        color: selectedComponent === "Visualization" ? "white" : "inherit",
+      }}
+    >
+      <ListItemIcon>
+        <AutoGraphIcon
+          sx={{
+            color: selectedComponent === "Visualization" ? "white" : "inherit",
+          }}
+        />
       </ListItemIcon>
       <ListItemText primary="Visualization" />
     </ListItemButton>
@@ -34,7 +49,7 @@ export const mainListItems = (
       <ListItemIcon>
         <SportsCricketIcon />
       </ListItemIcon>
-      <ListItemText primary="Playing Areas" />
+      <ListItemText primary="Shot Detection" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
@@ -46,7 +61,7 @@ export const mainListItems = (
       <ListItemIcon>
         <PersonIcon />
       </ListItemIcon>
-      <ListItemText primary="Profile" />
+      <ListItemText primary="User Profiling" />
     </ListItemButton>
   </React.Fragment>
 );
