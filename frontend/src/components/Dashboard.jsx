@@ -113,7 +113,7 @@ const darkTheme = createTheme({
 export default function Dashboard() {
   const [open, setOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState('Visualization');
+  const [selectedComponent, setSelectedComponent] = useState('VideoInsight');
 
   const theme = darkMode ? darkTheme : lightTheme;
 
