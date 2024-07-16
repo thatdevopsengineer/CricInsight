@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Button, Box, IconButton, Typography } from "@mui/material";
+import { useDropzone } from "react-dropzone";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -20,14 +21,19 @@ const VideoInsight = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
-  const handleVideoUpload = (event) => {
-    const file = event.target.files[0];
+  const onDrop = useCallback((acceptedFiles) => {
+    const file = acceptedFiles[0];
     if (file) {
       const url = URL.createObjectURL(file);
       setVideoSrc(url);
       setIsPlaying(false); // Reset playing state when a new video is uploaded
     }
-  };
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: "video/*",
+  });
 
   const handlePlayPause = () => {
     if (videoRef.current) {
@@ -142,7 +148,7 @@ const VideoInsight = () => {
           style={{ display: "none" }}
           id="video-upload"
           type="file"
-          onChange={handleVideoUpload}
+          onChange={(e) => onDrop(e.target.files)}
         />
         <label htmlFor="video-upload">
           <Button
@@ -185,7 +191,15 @@ const VideoInsight = () => {
         alignItems="center"
         mt={2}
       >
-        <Box display="flex" justifyContent="flex-start" alignItems="center">
+        <Box
+          display="flex"
+          justifyContent="flex-start"
+          borderTop={1}
+          px
+          solid
+          width="100%"
+          alignItems="center"
+        >
           <IconButton onClick={handleUndo}>
             <UndoIcon />
           </IconButton>
@@ -209,6 +223,7 @@ const VideoInsight = () => {
         </Box>
       </Box>
       <Box
+        {...getRootProps()}
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -217,12 +232,11 @@ const VideoInsight = () => {
         height="100px"
         border="1px solid #ccc"
         position="relative"
+        sx={{ cursor: "pointer" }}
       >
+        <input {...getInputProps()} />
         {videoSrc ? (
-          <canvas
-            ref={canvasRef}
-            style={{ width: "100%", height: "100px" }}
-          />
+          <canvas ref={canvasRef} style={{ width: "100%", height: "100px" }} />
         ) : (
           <Typography
             variant="h6"
@@ -234,7 +248,9 @@ const VideoInsight = () => {
               transform: "translate(-50%, -50%)",
             }}
           >
-            Drag and Drop media here to analyze videos
+            {isDragActive
+              ? "Drop the video here..."
+              : "Drag and Drop media here to analyze videos"}
           </Typography>
         )}
       </Box>
