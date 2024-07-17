@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button, Box, IconButton, Typography } from "@mui/material";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
+import UploadIcon from '@mui/icons-material/Upload';
+import FileDownloadDoneIcon from '@mui/icons-material/FileDownloadDone';
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
@@ -25,7 +26,7 @@ const VideoInsight = () => {
     if (file) {
       const url = URL.createObjectURL(file);
       setVideoSrc(url);
-      setIsPlaying(false); // Reset playing state when a new video is uploaded
+      setIsPlaying(false); 
     }
   };
 
@@ -101,52 +102,55 @@ const VideoInsight = () => {
       if (canvasRef.current && videoRef.current) {
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
-        const frameCount = Math.floor(videoRef.current.duration / 0.5); 
+        const frameCount = Math.floor(videoRef.current.duration / 0.5);
         const interval = 0.5; 
-    
+
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
-    
+
         let currentFrame = 0;
-    
+
         const drawFrame = () => {
           if (currentFrame <= frameCount) {
             videoRef.current.currentTime = currentFrame * interval;
             videoRef.current.onseeked = () => {
+              // Draw frame
               context.drawImage(
                 videoRef.current,
-                (currenFrame * canvas.width) / frameCount,
+                (currentFrame * canvas.width) / frameCount,
                 30, 
                 canvas.width / frameCount,
-                canvas.height - 30 
+                canvas.height - 30
               );
-    
-              // // Draw vertical line
+
+              // Draw vertical line
               // context.beginPath();
               // context.moveTo((currentFrame * canvas.width) / frameCount, 0);
               // context.lineTo((currentFrame * canvas.width) / frameCount, canvas.height);
               // context.strokeStyle = currentFrame % 2 === 0 ? 'black' : 'grey'; // Black line for every second, grey for every half-second
               // context.lineWidth = 1;
               // context.stroke();
-    
+
               // Draw time indicator for each second
               if (currentFrame % 2 === 0) {
                 context.font = "12px Arial";
                 context.fillStyle = "black";
-                context.fillText(`${currentFrame / 2}s`, (currentFrame * canvas.width) / frameCount, 20); // Adjust position of the time indicator
+                context.fillText(
+                  `${currentFrame / 2}s`,
+                  (currentFrame * canvas.width) / frameCount,
+                  20
+                );
               }
-    
+
               currentFrame++;
-              drawFrame(); 
+              drawFrame();
             };
           }
         };
-    
+
         drawFrame(); 
       }
     };
-    
-    
 
     if (videoSrc) {
       videoRef.current.onloadedmetadata = () => {
@@ -182,9 +186,10 @@ const VideoInsight = () => {
             variant="contained"
             color="primary"
             component="span"
-            startIcon={<UploadFileIcon />}
+            endIcon={videoSrc ? <FileDownloadDoneIcon /> : < UploadIcon/>}
+            disabled={videoSrc !== ""}
           >
-            Upload Video
+            {videoSrc ? "Done " : "Upload"}
           </Button>
         </label>
       </Box>
@@ -218,7 +223,13 @@ const VideoInsight = () => {
         alignItems="center"
         mt={2}
       >
-        <Box display="flex" justifyContent="flex-start"  borderTop="1px solid #ccc" width="100%" alignItems="center">
+        <Box
+          display="flex"
+          justifyContent="flex-start"
+          borderTop="1px solid #ccc"
+          width="100%"
+          alignItems="center"
+        >
           <IconButton onClick={handleUndo}>
             <UndoIcon />
           </IconButton>
@@ -235,7 +246,6 @@ const VideoInsight = () => {
             <DeleteIcon />
           </IconButton>
         </Box>
-        
       </Box>
       <Box
         display="flex"
@@ -250,10 +260,7 @@ const VideoInsight = () => {
       >
         <input {...getInputProps()} />
         {videoSrc ? (
-          <canvas
-            ref={canvasRef}
-            style={{ width: "100%", height: "100px" }}
-          />
+          <canvas ref={canvasRef} style={{ width: "100%", height: "100px" }} />
         ) : (
           <Typography
             variant="h6"
