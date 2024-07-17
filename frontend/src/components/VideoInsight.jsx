@@ -80,19 +80,19 @@ const VideoInsight = () => {
     console.log("Undo clicked");
   };
 
-  const handleRedo = () => () => {
+  const handleRedo = () => {
     console.log("Redo clicked");
   };
 
-  const handleCut = () => () => {
+  const handleCut = () => {
     console.log("Cut clicked");
   };
 
-  const handleAdd = () => () => {
+  const handleAdd = () => {
     console.log("Add clicked");
   };
 
-  const handleDelete = () => () => {
+  const handleDelete = () => {
     console.log("Delete clicked");
   };
 
@@ -102,11 +102,11 @@ const VideoInsight = () => {
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
         const frameCount = Math.floor(videoRef.current.duration);
-        const interval = videoRef.current.duration / frameCount;
-
+        const interval = 1; 
+    
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
-
+    
         for (let i = 0; i < frameCount; i++) {
           setTimeout(() => {
             videoRef.current.currentTime = i * interval;
@@ -114,15 +114,19 @@ const VideoInsight = () => {
               context.drawImage(
                 videoRef.current,
                 (i * canvas.width) / frameCount,
-                0,
+                30, 
                 canvas.width / frameCount,
-                canvas.height
+                canvas.height - 20
               );
+              context.font = "12px Arial";
+              context.fillStyle = "black";
+              context.fillText(`${i}s`, (i * canvas.width) / frameCount, 10); 
             };
-          }, i * 200); // Adjust timeout as needed
+          }, i * 200);
         }
       }
     };
+    
 
     if (videoSrc) {
       videoRef.current.onloadedmetadata = () => {
@@ -194,7 +198,7 @@ const VideoInsight = () => {
         alignItems="center"
         mt={2}
       >
-        <Box display="flex" justifyContent="flex-start" borderTop={1}px solid width="100%" alignItems="center">
+        <Box display="flex" justifyContent="flex-start"  borderTop="1px solid #ccc" width="100%" alignItems="center">
           <IconButton onClick={handleUndo}>
             <UndoIcon />
           </IconButton>
@@ -211,11 +215,7 @@ const VideoInsight = () => {
             <DeleteIcon />
           </IconButton>
         </Box>
-        <Box>
-          <Typography variant="body1">
-            {Math.floor(videoCurrentTime)} / {Math.floor(videoDuration)} seconds
-          </Typography>
-        </Box>
+        
       </Box>
       <Box
         display="flex"
@@ -224,7 +224,7 @@ const VideoInsight = () => {
         mt={2}
         width="100%"
         height="100px"
-        border="1px solid #ccc"
+        borderTop="1px solid #ccc"
         position="relative"
         {...getRootProps()}
       >
