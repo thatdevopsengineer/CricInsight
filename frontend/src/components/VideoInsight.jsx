@@ -101,31 +101,51 @@ const VideoInsight = () => {
       if (canvasRef.current && videoRef.current) {
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
-        const frameCount = Math.floor(videoRef.current.duration);
-        const interval = 1; 
+        const frameCount = Math.floor(videoRef.current.duration / 0.5); 
+        const interval = 0.5; 
     
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
     
-        for (let i = 0; i < frameCount; i++) {
-          setTimeout(() => {
-            videoRef.current.currentTime = i * interval;
+        let currentFrame = 0;
+    
+        const drawFrame = () => {
+          if (currentFrame <= frameCount) {
+            videoRef.current.currentTime = currentFrame * interval;
             videoRef.current.onseeked = () => {
               context.drawImage(
                 videoRef.current,
-                (i * canvas.width) / frameCount,
+                (currenFrame * canvas.width) / frameCount,
                 30, 
                 canvas.width / frameCount,
-                canvas.height - 20
+                canvas.height - 30 
               );
-              context.font = "12px Arial";
-              context.fillStyle = "black";
-              context.fillText(`${i}s`, (i * canvas.width) / frameCount, 10); 
+    
+              // // Draw vertical line
+              // context.beginPath();
+              // context.moveTo((currentFrame * canvas.width) / frameCount, 0);
+              // context.lineTo((currentFrame * canvas.width) / frameCount, canvas.height);
+              // context.strokeStyle = currentFrame % 2 === 0 ? 'black' : 'grey'; // Black line for every second, grey for every half-second
+              // context.lineWidth = 1;
+              // context.stroke();
+    
+              // Draw time indicator for each second
+              if (currentFrame % 2 === 0) {
+                context.font = "12px Arial";
+                context.fillStyle = "black";
+                context.fillText(`${currentFrame / 2}s`, (currentFrame * canvas.width) / frameCount, 20); // Adjust position of the time indicator
+              }
+    
+              currentFrame++;
+              drawFrame(); 
             };
-          }, i * 200);
-        }
+          }
+        };
+    
+        drawFrame(); 
       }
     };
+    
     
 
     if (videoSrc) {
