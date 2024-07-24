@@ -82,11 +82,22 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
       <ListItemText primary="Adaptive Learning" />
     </ListItemButton>
 
-    <ListItemButton>
+    <ListItemButton
+      onClick={() => handleMenuClick("Profile")}
+      sx={{
+        backgroundColor:
+          selectedComponent === "Profile" ? "#030947" : "inherit",
+        color: selectedComponent === "Profile" ? "white" : "inherit",
+      }}
+    >
       <ListItemIcon>
-        <PersonIcon />
+        <PersonIcon
+          sx={{
+            color: selectedComponent === "Profile" ? "white" : "inherit",
+          }}
+        />
       </ListItemIcon>
-      <ListItemText primary="User Profiling" />
+      <ListItemText primary="Profile" />
     </ListItemButton>
   </React.Fragment>
 );
