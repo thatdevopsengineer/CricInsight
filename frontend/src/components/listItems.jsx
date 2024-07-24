@@ -46,6 +46,23 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
       <ListItemText primary="Visualization" />
     </ListItemButton>
     <ListItemButton
+      onClick={() => handleMenuClick("PlayingAreas")}
+      sx={{
+        backgroundColor:
+          selectedComponent === "PlayingAreas" ? "#030947" : "inherit",
+        color: selectedComponent === "PlayingAreas" ? "white" : "inherit",
+      }}
+    >
+      <ListItemIcon>
+        <SportsCricketIcon
+          sx={{
+            color: selectedComponent === "PlayingAreas" ? "white" : "inherit",
+          }}
+        />
+      </ListItemIcon>
+      <ListItemText primary="Playing Areas" />
+    </ListItemButton>
+    <ListItemButton
       onClick={() => handleMenuClick("PaymentGateway")}
       sx={{
         backgroundColor:
@@ -54,17 +71,11 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
       }}
     >
       <ListItemIcon>
-        <SportsCricketIcon
+        <PsychologyIcon
           sx={{
             color: selectedComponent === "PaymentGateway" ? "white" : "inherit",
           }}
         />
-      </ListItemIcon>
-      <ListItemText primary="Playing Areas" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <PsychologyIcon />
       </ListItemIcon>
       <ListItemText primary="Adaptive Learning" />
     </ListItemButton>

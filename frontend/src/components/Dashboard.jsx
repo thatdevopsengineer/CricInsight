@@ -19,7 +19,8 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import { mainListItems, secondaryListItems } from "./listItems";
 import Visualization from "./Visualization";
 import VideoInsight from "./VideoInsight";
-import PaymentGateway from "./PaymentGateway";
+import PlayingAreas from "./PlayingAreas";
+import PaymentGateway from "./paymentGateway";
 
 const drawerWidth = 240;
 
@@ -223,6 +224,7 @@ export default function Dashboard() {
               <Grid item xs={12}>
                 {selectedComponent === "VideoInsight" && <VideoInsight />}
                 {selectedComponent === "Visualization" && <Visualization />}
+                {selectedComponent === "PlayingAreas" && <PlayingAreas />}
                 {selectedComponent === "PaymentGateway" && <PaymentGateway />}
               </Grid>
             </Grid>
