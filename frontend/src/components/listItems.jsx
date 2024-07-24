@@ -45,6 +45,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
       </ListItemIcon>
       <ListItemText primary="Visualization" />
     </ListItemButton>
+
     <ListItemButton
       onClick={() => handleMenuClick("PlayingAreas")}
       sx={{
@@ -62,6 +63,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
       </ListItemIcon>
       <ListItemText primary="Playing Areas" />
     </ListItemButton>
+
     <ListItemButton
       onClick={() => handleMenuClick("PaymentGateway")}
       sx={{
@@ -79,6 +81,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
       </ListItemIcon>
       <ListItemText primary="Adaptive Learning" />
     </ListItemButton>
+
     <ListItemButton>
       <ListItemIcon>
         <PersonIcon />
