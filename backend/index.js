@@ -45,10 +45,9 @@ app.post('/login', (req, res)=>{
     })
 })
 
-
 app.get('/user', (req, res) => {
     const email = req.query.email;
-    
+  
     FormDataModel.findOne({ email: email })
       .then(user => {
         if (user) {
@@ -62,11 +61,10 @@ app.get('/user', (req, res) => {
       });
   });
   
-
-app.post('/updateUser', (req, res) => {
+  app.post('/updateUser', (req, res) => {
     const { email, firstName, lastName, password } = req.body;
     const name = `${firstName} ${lastName}`;
-    
+  
     FormDataModel.findOneAndUpdate({ email: email }, { name: name, password: password }, { new: true })
       .then(updatedUser => {
         if (updatedUser) {
@@ -80,8 +78,23 @@ app.post('/updateUser', (req, res) => {
       });
   });
   
-
-app.listen(3001, () => {
-    console.log("Server listining on http://127.0.0.1:3001");
-
-});
+  app.delete('/deleteUser', (req, res) => {
+    const email = req.query.email;
+  
+    FormDataModel.findOneAndDelete({ email: email })
+      .then(deletedUser => {
+        if (deletedUser) {
+          res.json("User deleted successfully");
+        } else {
+          res.status(404).json("User not found");
+        }
+      })
+      .catch(err => {
+        res.status(500).json(err);
+      });
+  });
+  
+  app.listen(3001, () => {
+    console.log("Server listening on http://127.0.0.1:3001");
+  });
+  

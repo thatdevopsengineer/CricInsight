@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -17,11 +17,12 @@ import ShareIcon from "@mui/icons-material/Share";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { mainListItems, secondaryListItems } from "./listItems";
-import Visualization from './Visualization';
-import VideoInsight from './VideoInsight';
-import PaymentGateway from './PaymentGateway';
-import PlayingAreas from './PlayingAreas';
+import Visualization from "./Visualization";
+import VideoInsight from "./VideoInsight";
+import PaymentGateway from "./PaymentGateway";
+import PlayingAreas from "./PlayingAreas";
 import Profile from "./Profile";
+
 
 const drawerWidth = 240;
 
@@ -116,7 +117,8 @@ const darkTheme = createTheme({
 export default function Dashboard() {
   const [open, setOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState('VideoInsight');
+  const [selectedComponent, setSelectedComponent] = useState("VideoInsight");
+  const [userName, setUserName] = useState("");
 
   const theme = darkMode ? darkTheme : lightTheme;
 
@@ -132,9 +134,30 @@ export default function Dashboard() {
     setSelectedComponent(component);
   };
 
+  // useEffect(() => {
+  //   const userEmail = localStorage.getItem("userEmail");
+  //   if (userEmail) {
+  //     axios
+  //       .get(`http://localhost:3001/user?email=${userEmail}`)
+  //       .then((response) => {
+  //         const { name } = response.data;
+  //         setUserName(name);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching user data", error);
+  //       });
+  //   }
+  // }, []);
+
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex", backgroundColor: theme.palette.background.default, marginTop: 7 }}>
+      <Box
+        sx={{
+          display: "flex",
+          backgroundColor: theme.palette.background.default,
+          marginTop: 7,
+        }}
+      >
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
@@ -163,8 +186,13 @@ export default function Dashboard() {
               variant="h6"
               color="inherit"
               noWrap
-              sx={{ flexGrow: 1, fontWeight: 'bold', fontFamily: "Poppins, sans-serif", }}
+              sx={{
+                flexGrow: 1,
+                fontWeight: "bold",
+                fontFamily: "Poppins, sans-serif",
+              }}
             >
+              {/* {`Welcome ${userName}`} */}
               Overview
             </Typography>
             <IconButton>
@@ -172,9 +200,13 @@ export default function Dashboard() {
             </IconButton>
             <IconButton onClick={toggleTheme}>
               {darkMode ? (
-                <LightModeIcon sx={{ color: theme.palette.text.primary, mx: 1 }} />
+                <LightModeIcon
+                  sx={{ color: theme.palette.text.primary, mx: 1 }}
+                />
               ) : (
-                <DarkModeIcon sx={{ color: theme.palette.text.primary, mx: 1 }} />
+                <DarkModeIcon
+                  sx={{ color: theme.palette.text.primary, mx: 1 }}
+                />
               )}
             </IconButton>
           </Toolbar>
@@ -235,12 +267,11 @@ export default function Dashboard() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                {selectedComponent === 'Visualization' && <Visualization />}
-                {selectedComponent === 'VideoInsight' && <VideoInsight />}
-                {selectedComponent === 'PlayingAreas' && <PlayingAreas />}
-                {selectedComponent === 'PaymentGateway' && <PaymentGateway />}
-                {selectedComponent === 'Profile' && <Profile />}
-
+                {selectedComponent === "Visualization" && <Visualization />}
+                {selectedComponent === "VideoInsight" && <VideoInsight />}
+                {selectedComponent === "PlayingAreas" && <PlayingAreas />}
+                {selectedComponent === "PaymentGateway" && <PaymentGateway />}
+                {selectedComponent === "Profile" && <Profile />}
               </Grid>
             </Grid>
           </Container>

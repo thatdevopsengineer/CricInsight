@@ -8,6 +8,7 @@ import SportsCricketIcon from "@mui/icons-material/SportsCricket";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { Link } from "@mui/material";
 
 export const mainListItems = (handleMenuClick, selectedComponent) => (
   <React.Fragment>
@@ -104,11 +105,20 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
 
 export const secondaryListItems = (
   <React.Fragment>
+    <Link 
+    href="/login"
+    sx={{
+      textTransform: "none",
+      textDecoration: "none",      
+      color: "#000000",
+    }}
+    >
     <ListItemButton>
       <ListItemIcon>
         <LogoutIcon />
       </ListItemIcon>
       <ListItemText primary="Logout" />
     </ListItemButton>
+    </Link>
   </React.Fragment>
 );

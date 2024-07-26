@@ -4,6 +4,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+
 
 const theme = createTheme({
   typography: {
@@ -23,6 +25,9 @@ const ProfileEdit = () => {
     email: "",
     password: ""
   });
+
+const navigate = useNavigate();
+
 
   useEffect(() => {
     const userEmail = localStorage.getItem("userEmail");
@@ -62,6 +67,22 @@ const ProfileEdit = () => {
       });
   };
 
+  const handleDelete = () => {
+    axios
+      .delete(`http://localhost:3001/deleteUser?email=${profileData.email}`)
+      .then((response) => {
+        console.log("Profile deleted successfully:", response.data);
+        toast.success("Profile deleted successfully!", {});
+        localStorage.removeItem("userEmail");
+        setTimeout(() => {
+            navigate("/login");
+          }, 2000);      })
+      .catch((error) => {
+        console.error("Error deleting profile:", error);
+        toast.error("Error deleting profile:");
+      });
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="md">
@@ -77,7 +98,7 @@ const ProfileEdit = () => {
             Edit profile
           </Typography>
           <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSubmit}>
-          <ToastContainer />
+            <ToastContainer />
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -87,7 +108,6 @@ const ProfileEdit = () => {
                   fullWidth
                   id="firstName"
                   label="First Name"
-                  autoFocus
                   value={profileData.firstName}
                   onChange={handleChange}
                 />
@@ -142,7 +162,7 @@ const ProfileEdit = () => {
                   Save
                 </Button>
               </Box>
-              <Button type="submit" variant="contained" color="primary" sx={{ background: '#D52728' }}>
+              <Button onClick={handleDelete} variant="contained" color="primary" sx={{ background: '#D52728' }}>
                 Delete
               </Button>
             </Box>
