@@ -27,12 +27,14 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+  
     axios
       .post("http://localhost:3001/login", { email, password })
       .then((result) => {
         if (result.data === "Success") {
           toast.success("Login successfully!", {});
+          // Store email in local storage
+          localStorage.setItem("userEmail", email);
           setTimeout(() => {
             navigate("/dashboard");
           }, 2000);
@@ -44,6 +46,7 @@ const Login = () => {
         toast.error("An error occurred. Please try again.");
       });
   };
+  
 
   const handleGoogleLogin = () => {
     // Implement Google login functionality here
