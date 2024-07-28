@@ -82,9 +82,10 @@ const PaymentGateway = () => {
                 backgroundColor: plan.highlighted ? '#030947' : '#FFFFFF',
                 color: plan.highlighted ? '#FFFFFF' : '#000000',
                 // borderRadius: 2,
-                boxShadow: plan ? '2px red' : 'none',
-                border: '1px solid #747474',
+                // boxShadow: plan ? '2px red' : 'none',
+                // border: '1px solid #747474',
               }}
+              elevation="4"
             >
               <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
                 {plan.title}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Button, Grid, Typography, Container, Box } from "@mui/material";
+import { TextField, Button, Grid, Typography, Container, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -28,9 +28,9 @@ const ProfileEdit = () => {
     password: ""
   });
 
-const navigate = useNavigate();
-const [showPassword, setShowPassword] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userEmail = localStorage.getItem("userEmail");
@@ -71,6 +71,7 @@ const [showPassword, setShowPassword] = useState(false);
   };
 
   const handleDelete = () => {
+    setOpen(false);
     axios
       .delete(`http://localhost:3001/deleteUser?email=${profileData.email}`)
       .then((response) => {
@@ -78,12 +79,21 @@ const [showPassword, setShowPassword] = useState(false);
         toast.success("Profile deleted successfully!", {});
         localStorage.removeItem("userEmail");
         setTimeout(() => {
-            navigate("/login");
-          }, 2000);      })
+          navigate("/login");
+        }, 2000);
+      })
       .catch((error) => {
         console.error("Error deleting profile:", error);
         toast.error("Error deleting profile:");
       });
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -150,7 +160,6 @@ const [showPassword, setShowPassword] = useState(false);
                   value={profileData.password}
                   onChange={handleChange}
                   type={showPassword ? "text" : "password"}
-
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -179,12 +188,33 @@ const [showPassword, setShowPassword] = useState(false);
                   Save
                 </Button>
               </Box>
-              <Button onClick={handleDelete} variant="contained" color="primary" sx={{ background: '#D52728' }}>
+              <Button onClick={handleClickOpen} variant="contained" color="primary" sx={{ background: '#D52728' }}>
                 Delete
               </Button>
             </Box>
           </Box>
         </Box>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Confirm Deletion"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you want to delete your profile? This action cannot be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleDelete} sx={{ background: '#D52728', color: 'white' }} autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </ThemeProvider>
   );
