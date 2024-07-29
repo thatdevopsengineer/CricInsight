@@ -60,7 +60,7 @@ export default function Experience() {
                   borderRadius: 2,
                 }}
               >
-                <Typography variant="h6" component="h6" sx={{ textSelf: 'flex-start', maxWidth: '70%', mb: 1, fontWeight: 'bold', fontSize: 24 }}>
+                <Typography variant="h6" component="h6" sx={{ textSelf: 'flex-start', textAlign: 'left',maxWidth: '70%', mb: 1, fontWeight: 'bold', fontSize: 24 }}>
                   {exp.heading}
                 </Typography>
                 <Typography variant="body1" component="p" sx={{fontSize: 16, textAlign: 'left',height: '40%'}}>

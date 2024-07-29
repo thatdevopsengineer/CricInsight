@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button, Box, IconButton, Typography } from "@mui/material";
 import UploadIcon from '@mui/icons-material/Upload';
-import FileDownloadDoneIcon from '@mui/icons-material/FileDownloadDone';
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
@@ -13,6 +12,7 @@ import ContentCutIcon from "@mui/icons-material/ContentCut";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDropzone } from "react-dropzone";
+import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
 
 const VideoInsight = () => {
   const [videoSrc, setVideoSrc] = useState("");
@@ -181,17 +181,7 @@ const VideoInsight = () => {
           type="file"
           onChange={(e) => handleVideoUpload(e.target.files[0])}
         />
-        <label htmlFor="video-upload">
-          <Button
-            variant="contained"
-            color="primary"
-            component="span"
-            endIcon={videoSrc ? <FileDownloadDoneIcon /> : < UploadIcon/>}
-            disabled={videoSrc !== ""}
-          >
-            {videoSrc ? "Done " : "Upload"}
-          </Button>
-        </label>
+        
       </Box>
       <Box
         component="video"
@@ -222,11 +212,11 @@ const VideoInsight = () => {
         width="100%"
         alignItems="center"
         mt={2}
+        borderTop="1px solid #ccc"
       >
         <Box
           display="flex"
           justifyContent="flex-start"
-          borderTop="1px solid #ccc"
           width="100%"
           alignItems="center"
         >
@@ -245,7 +235,22 @@ const VideoInsight = () => {
           <IconButton onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
+
+          
         </Box>
+        <label htmlFor="video-upload">
+          <Button
+            sx={{justifySelf: 'flex-end',marginTop: 1, marginRight: 12, background: '#d3d3d3', color: 'black'}}
+            // variant="contained"
+            color="primary"
+            padding= "2"
+            component="span"
+            endIcon={videoSrc ? <DownloadDoneIcon /> : < UploadIcon/>}
+            // disabled={videoSrc !== ""}
+          >
+            {videoSrc ? "Done" : "Upload"}
+          </Button>
+        </label>
       </Box>
       <Box
         display="flex"
