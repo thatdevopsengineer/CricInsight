@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import validator from "validator"; // Import validator
 
 const theme = createTheme({
   typography: {
@@ -27,7 +28,7 @@ const ProfileEdit = () => {
     email: "",
     password: ""
   });
-
+  const [errors, setErrors] = useState({}); // State for errors
   const [showPassword, setShowPassword] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -54,10 +55,41 @@ const ProfileEdit = () => {
       ...prevData,
       [name]: value,
     }));
+    setErrors({ ...errors, [name]: "" }); // Reset error for the field
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    let validationErrors = {};
+
+    if (!validator.isAlpha(profileData.firstName)) {
+      validationErrors.firstName = "First name should contain only alphabets.";
+    }
+
+    if (!validator.isAlpha(profileData.lastName)) {
+      validationErrors.lastName = "Last name should contain only alphabets.";
+    }
+
+    if (!validator.isEmail(profileData.email)) {
+      validationErrors.email = "Invalid email format.";
+    }
+
+    if (!validator.isLength(profileData.password, { min: 8 })) {
+      validationErrors.password = "Passwords must have at least 8 characters.";
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[$]).{8,}$/;
+    if (!passwordRegex.test(profileData.password)) {
+      validationErrors.password =
+        "Password must have at least one uppercase letter, one number, and the special symbol $.";
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     axios
       .post("http://localhost:3001/updateUser", profileData)
       .then((response) => {
@@ -123,6 +155,8 @@ const ProfileEdit = () => {
                   label="First Name"
                   value={profileData.firstName}
                   onChange={handleChange}
+                  error={!!errors.firstName}
+                  helperText={errors.firstName}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -135,6 +169,8 @@ const ProfileEdit = () => {
                   autoComplete="lname"
                   value={profileData.lastName}
                   onChange={handleChange}
+                  error={!!errors.lastName}
+                  helperText={errors.lastName}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -147,6 +183,8 @@ const ProfileEdit = () => {
                   autoComplete="email"
                   value={profileData.email}
                   onChange={handleChange}
+                  error={!!errors.email}
+                  helperText={errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -160,6 +198,8 @@ const ProfileEdit = () => {
                   value={profileData.password}
                   onChange={handleChange}
                   type={showPassword ? "text" : "password"}
+                  error={!!errors.password}
+                  helperText={errors.password}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -181,36 +221,31 @@ const ProfileEdit = () => {
             </Grid>
             <Box display="flex" justifyContent="space-between" sx={{ mt: 3 }}>
               <Box>
-                <Button variant="outlined" sx={{ mr: 2 }}>
+                <Button variant="outlined" sx={{ mr: 2 }} onClick={() => navigate(-1)}>
                   Cancel
                 </Button>
                 <Button type="submit" variant="contained" color="primary">
                   Save
                 </Button>
               </Box>
-              <Button onClick={handleClickOpen} variant="contained" color="primary" sx={{ background: '#D52728' }}>
+              <Button onClick={handleClickOpen} sx={{ background: '#D52728' }} variant="contained" color="error">
                 Delete
               </Button>
             </Box>
           </Box>
         </Box>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{"Confirm Deletion"}</DialogTitle>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>{"Delete Account"}</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Are you sure you want to delete your profile? This action cannot be undone.
+            <DialogContentText>
+              Are you sure you want to delete your account? This action cannot be undone.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleDelete} sx={{ background: '#D52728', color: 'white' }} autoFocus>
+            <Button onClick={handleDelete} color="error" sx={{background: '#D52728', color: 'white'}} autoFocus>
               Delete
             </Button>
           </DialogActions>
