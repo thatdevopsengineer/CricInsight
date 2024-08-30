@@ -7,6 +7,7 @@ import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import SportsCricketIcon from "@mui/icons-material/SportsCricket";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import PersonIcon from "@mui/icons-material/Person";
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "@mui/material";
 
@@ -15,7 +16,9 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
     <ListItemButton
       onClick={() => handleMenuClick("VideoInsight")}
       sx={{
+        borderBottom: '1px solid #ccc',
         backgroundColor:
+          
           selectedComponent === "VideoInsight" ? "#030947" : "inherit",
         color: selectedComponent === "VideoInsight" ? "white" : "inherit",
       }}
@@ -32,6 +35,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
     <ListItemButton
       onClick={() => handleMenuClick("Visualization")}
       sx={{
+        borderBottom: '1px solid #ccc',
         backgroundColor:
           selectedComponent === "Visualization" ? "#030947" : "inherit",
         color: selectedComponent === "Visualization" ? "white" : "inherit",
@@ -50,6 +54,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
     <ListItemButton
       onClick={() => handleMenuClick("PlayingAreas")}
       sx={{
+        borderBottom: '1px solid #ccc',
         backgroundColor:
           selectedComponent === "PlayingAreas" ? "#030947" : "inherit",
         color: selectedComponent === "PlayingAreas" ? "white" : "inherit",
@@ -68,6 +73,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
     <ListItemButton
       onClick={() => handleMenuClick("PaymentGateway")}
       sx={{
+        borderBottom: '1px solid #ccc',
         backgroundColor:
           selectedComponent === "PaymentGateway" ? "#030947" : "inherit",
         color: selectedComponent === "PaymentGateway" ? "white" : "inherit",
@@ -86,6 +92,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
     <ListItemButton
       onClick={() => handleMenuClick("Profile")}
       sx={{
+        borderBottom: '1px solid #ccc',
         backgroundColor:
           selectedComponent === "Profile" ? "#030947" : "inherit",
         color: selectedComponent === "Profile" ? "white" : "inherit",
@@ -100,6 +107,27 @@ export const mainListItems = (handleMenuClick, selectedComponent) => (
       </ListItemIcon>
       <ListItemText primary="Profile" />
     </ListItemButton>
+
+    <ListItemButton
+      onClick={() => handleMenuClick("AI Assistant")}
+      sx={{
+        borderBottom: '1px solid #ccc',
+        backgroundColor:
+          selectedComponent === "AI Assistant" ? "#030947" : "inherit",
+        color: selectedComponent === "AI Assistant" ? "white" : "inherit",
+      }}
+    >
+      <ListItemIcon>
+        <SupportAgentIcon
+          sx={{
+            color: selectedComponent === "AI Assistant" ? "white" : "inherit",
+          }}
+        />
+      </ListItemIcon>
+      <ListItemText primary="AI Assistant" />
+    </ListItemButton>
+
+
   </React.Fragment>
 );
 
@@ -111,10 +139,11 @@ export const secondaryListItems = (
       textTransform: "none",
       textDecoration: "none",      
       color: "#000000",
+      
     }}
     >
-    <ListItemButton>
-      <ListItemIcon>
+    <ListItemButton sx={{borderTop: '1px solid #ccc'}}>
+      <ListItemIcon >
         <LogoutIcon />
       </ListItemIcon>
       <ListItemText primary="Logout" />
