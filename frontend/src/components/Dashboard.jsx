@@ -22,6 +22,7 @@ import VideoInsight from "./VideoInsight";
 import PaymentGateway from "./PaymentGateway";
 import PlayingAreas from "./PlayingAreas";
 import Profile from "./Profile";
+import AIAssistant from "./AIAssistant";
 
 const drawerWidth = 240;
 
@@ -257,6 +258,7 @@ export default function Dashboard() {
                 {selectedComponent === "PlayingAreas" && <PlayingAreas />}
                 {selectedComponent === "PaymentGateway" && <PaymentGateway />}
                 {selectedComponent === "Profile" && <Profile />}
+                {selectedComponent === "AI Assistant" && < AIAssistant/>}
               </Grid>
             </Grid>
           </Container>
