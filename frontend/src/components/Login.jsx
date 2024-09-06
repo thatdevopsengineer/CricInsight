@@ -138,7 +138,7 @@ const Login = () => {
                 id="email"
                 label="Email Address"
                 name="email"
-                focused
+                autoFocus
                 autoComplete="email"
                 onChange={(event) => setEmail(event.target.value)}
                 sx={{ my: 2 }}
