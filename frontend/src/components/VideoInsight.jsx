@@ -178,7 +178,7 @@ const VideoInsight = () => {
         flexDirection="column"
         alignItems="center"
         width="100%"
-        sx={{ filter: blurred ? "blur(4px)" : "none" }} 
+        sx={{ filter: blurred ? "blur(8px)" : "none" }} 
       >
         <Box
           display="flex"
@@ -280,10 +280,12 @@ const VideoInsight = () => {
           borderTop="1px solid #ccc"
           position="relative"
           {...getRootProps()}
+          overflow="auto" // Enable scrolling
           sx={{
             borderRadius: 1,
             backgroundColor: isDragActive ? '#f0f0f0' : '#fff',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            whiteSpace: 'nowrap', // Prevent wrapping of content inside the box
           }}
         >
           <input {...getInputProps()} />
@@ -312,20 +314,26 @@ const VideoInsight = () => {
       {loading && (
         <Box
           position="fixed"
-          top={0}
-          left={0}
-          width="100%"
-          height="100%"
-          bgcolor="rgba(255, 255, 255, 0.8)"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          sx={{ zIndex: 9999 }}
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          bgcolor="white"
+          p={2}
+          borderRadius={2}
         >
-          <Lottie options={{ animationData: loaderAnimation, loop: true, autoplay: true }} height={150} width={150} />
-          <Typography variant="h6" sx={{ filter: "none" }}>Uploading Video</Typography>
-
+          <Lottie
+            options={{
+              animationData: loaderAnimation,
+              loop: true,
+              autoplay: true,
+              speed: 10 
+            }}
+            height={100}
+            width={100}
+          />
+          <Typography variant="h6" align="center">
+            Processing video...
+          </Typography>
         </Box>
       )}
     </Box>
