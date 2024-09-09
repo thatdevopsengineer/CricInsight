@@ -70,8 +70,25 @@ export default function Experience() {
                     justifyContent: 'flex-start',
                     alignItems: 'flex-start',
                     color: '#fff',
-                    p: 2,
-                    ml: 1,
+                     
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    '&:hover': {
+                      boxShadow: 6,
+                    },
+                  }}
+                >
+                  <Box
+                  sx={{
+                    background: 'rgba(0,0,0,0.5)',
+                    height: 400,
+                    width: 270,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start',
+                    color: '#fff',
+                   
                     borderRadius: 2,
                     boxShadow: 3,
                     '&:hover': {
@@ -82,17 +99,18 @@ export default function Experience() {
                   <Typography
                     variant="h6"
                     component="h6"
-                    sx={{ textAlign: 'left', maxWidth: '70%', mb: 1, fontWeight: 'bold', fontSize: 24 }}
+                    sx={{ textAlign: 'left', maxWidth: '70%', fontWeight: 'bold', fontSize: 24 , px: 3, pt: 3, pb: 1}}
                   >
                     {exp.heading}
                   </Typography>
                   <Typography
                     variant="body1"
                     component="p"
-                    sx={{ fontSize: 16, textAlign: 'left', height: '40%' }}
+                    sx={{ fontSize: 16, textAlign: 'left', height: '40%', px:3, color: 'rgba(360,360,360,0.9)'                    }}
                   >
                     {exp.text}
                   </Typography>
+                  </Box>
                 </Box>
               </animated.div>
             </Grid>
