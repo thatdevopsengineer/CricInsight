@@ -14,6 +14,10 @@ import { useDropzone } from "react-dropzone";
 import CustomButton from "./CustomButton";
 import Lottie from 'react-lottie';
 import loaderAnimation from './Loader.json'; 
+import axios from 'axios'; // Import axios
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
+
+// import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs
 
 const VideoInsight = () => {
   const [videoSrc, setVideoSrc] = useState("");
@@ -23,7 +27,18 @@ const VideoInsight = () => {
   const [loading, setLoading] = useState(false); 
   const [blurred, setBlurred] = useState(false); 
   const videoRef = useRef(null);
+  const [Id, setId] = useState(null);  
   const canvasRef = useRef(null);
+  const [videoId, setVideoId] = useState(null); // State to store video ID
+
+  const userEmail = localStorage.getItem('userEmail');
+
+  const [videoData, setVideoData] = useState({
+    // videoId: Id,      // Initialize videoId
+    email: userEmail,
+    // shots: []        // Add shots array if needed
+  });
+
 
   const handleVideoUpload = (file) => {
     if (file) {
@@ -32,6 +47,11 @@ const VideoInsight = () => {
       const url = URL.createObjectURL(file);
       setVideoSrc(url);
       setIsPlaying(false);
+      // const uniqueId = uuidv4(); // Generate a unique ID for the video
+      // setId(uniqueId);
+      // setVideoId(uniqueId);
+      // console.log(uniqueId)
+      // Optionally, you can upload the video to the server here and get the server-side ID
     }
   };
 
@@ -102,6 +122,27 @@ const VideoInsight = () => {
   const handleDelete = () => {
     console.log("Delete clicked");
   };
+
+  const handleChange = (e) => {
+    setVideoData({ ...videoData, [e.target.name]: e.target.value });
+  };
+
+  // New function to handle "Done" button click
+  const handleDone = async () => {
+    // setVideoData(prevData => ({
+    //   ...prevData,
+    //   videoId: videoId
+    // }));
+    
+    try {
+      console.log('Sending video data:', videoData); // Log the video data to verify it's correct
+      const response = await axios.post('http://localhost:3001/api/videos', videoData);
+      console.log('Video data saved:', response.data);
+    } catch (error) {
+      console.error('Error saving video data:', error);
+    }
+  };
+  
 
   useEffect(() => {
     const drawFrames = () => {
@@ -207,7 +248,14 @@ const VideoInsight = () => {
             />
             <CustomButton
               title={videoSrc ? "Done" : "Upload"}
-              onClick={() => document.getElementById("video-upload").click()}
+              IconComponent={FileUploadOutlinedIcon} // Pass the custom icon here
+              onClick={() => {
+                if (videoSrc) {
+                  handleDone(); // Trigger handleDone when "Done" is clicked
+                } else {
+                  document.getElementById("video-upload").click();
+                }
+              }}
             />
           </Box>
         </Box>
@@ -293,19 +341,19 @@ const VideoInsight = () => {
             <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />
           ) : (
             <Typography
-            variant="h6"
-            color="textSecondary"
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          >
-            {isDragActive
-              ? "Drop the video here ..."
-              : "Drag and drop a video file here, or click to select one"}
-          </Typography>
+              variant="h6"
+              color="textSecondary"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              {isDragActive
+                ? "Drop the video here ..."
+                : "Drag and drop a video file here, or click to select one"}
+            </Typography>
           )}
         </Box>
       </Box>

@@ -6,12 +6,12 @@ import { useInView } from 'react-intersection-observer';
 const experiences = [
   {
     image: '/bg1.png',
-    heading: 'Analyze Videos',
+    heading: 'Videos Analysis',
     text: 'Decode practice videos with precision, gaining deeper insights into player tactics and game dynamics.',
   },
   {
     image: '/bg2.png',
-    heading: 'Shots Classification',
+    heading: 'Shots Visualization',
     text: 'Classify shots accurately, revealing player strategies and enhancing performance analysis.',
   },
   {

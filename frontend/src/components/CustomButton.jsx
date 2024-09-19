@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { IconButton, Box } from "@mui/material";
-import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import DownloadDoneOutlinedIcon from '@mui/icons-material/DownloadDoneOutlined';
 
-
-const CustomButton = ({ title = "Upload", onClick, sx }) => {
+const CustomButton = ({ title = "Upload", onClick, sx, IconComponent }) => {
   const [hover, setHover] = useState(false);
+
+  const getIcon = () => {
+    if (title === "Done") {
+      return <DownloadDoneOutlinedIcon sx={{ color: hover ? "#fff" : "#030947" }} />;
+    }
+    return IconComponent ? <IconComponent sx={{ color: hover ? "#fff" : "#030947" }} /> : null;
+  };
 
   return (
     <Box
@@ -43,11 +48,7 @@ const CustomButton = ({ title = "Upload", onClick, sx }) => {
             transition: "background-color 0.3s",
           }}
         >
-          {title === "Done" ? (
-            <DownloadDoneOutlinedIcon sx={{ color: hover ? "#fff" : "#030947" }} />
-          ) : (
-            <FileUploadOutlinedIcon sx={{ color: hover ? "#fff" : "#030947" }} />
-          )}
+          {getIcon()}
         </IconButton>
       </Box>
     </Box>

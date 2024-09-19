@@ -147,6 +147,9 @@ const ProfileEdit = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            justifyContent: 'flex-start',
+            // bgcolor: 'orange',
+            // pr: 40
           }}
         >
           <Typography component="h1" variant="h5" alignSelf="flex-start" fontWeight="600">
