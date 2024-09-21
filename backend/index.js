@@ -157,6 +157,42 @@ app.get('/api/user/shots', async (req, res) => {
   }
 });
 
+// Backend route to get the username (e.g., first name of the logged-in user)
+// Assuming you're using Express.js and Mongoose
+// Backend route to get the first name (username) of the logged-in user
+app.get('/username', async (req, res) => {
+  try {
+    const { email } = req.query; // Get email from query params
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // Fetch the user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Return the username
+    res.json({ username: user.name });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+// axios.post('/api/add-video', videoData)
+//   .then(response => {
+//     console.log("Video added successfully");
+//   })
+//   .catch(error => {
+//     console.error("Error adding video:", error);
+//   });
+
+
+// const videoRoutes = require('./videoRoutes');
+// app.use('/api/video', videoRoutes);
 
 
 // Server
