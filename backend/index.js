@@ -157,24 +157,22 @@ app.get('/api/user/shots', async (req, res) => {
   }
 });
 
-// Backend route to get the username (e.g., first name of the logged-in user)
-// Assuming you're using Express.js and Mongoose
-// Backend route to get the first name (username) of the logged-in user
-app.get('/username', async (req, res) => {
+
+app.get('/api/username', async (req, res) => {
   try {
-    const { email } = req.query; // Get email from query params
+    const { email } = req.query;
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
     }
 
-    // Fetch the user by email
-    const user = await User.findOne({ email });
+    const user = await FormDataModel.findOne({ email });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Return the username
-    res.json({ username: user.name });
+    const firstName = user.name.split(' ')[0];
+
+    res.json({ firstName: firstName });
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).json({ error: 'Internal server error' });

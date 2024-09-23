@@ -8,7 +8,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 router.get('/username', async (req, res) => {
     const { email } = req.query;
     try {
-        const user = await getUserByEmail(email); // Your database call here
+        const user = await getUserByEmail(email); 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
