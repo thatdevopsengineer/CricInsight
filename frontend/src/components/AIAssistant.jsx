@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Container, Typography, Grid, Card, CardContent, TextField, InputAdornment, IconButton, Box, } from "@mui/material";
+import { Container, Typography, Grid,Card, CardContent, TextField, InputAdornment, IconButton, Box} from "@mui/material";
 import { Send as SendIcon } from "@mui/icons-material";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
+import { ModeEdit as EditIcon } from "@mui/icons-material"; 
 
 const AIAssistant = () => {
   const [userName, setUserName] = useState("");
@@ -10,6 +11,7 @@ const AIAssistant = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSamples, setShowSamples] = useState(true);
 
   useEffect(() => {
     if (email) {
@@ -37,32 +39,63 @@ const AIAssistant = () => {
     setIsLoading(true);
 
     try {
-      const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-      if (!apiKey) {
-        throw new Error("OpenAI API key is not set");
-      }
-      
+      const apiKey = process.env.REACT_APP_GEMINI_API_KEY; 
+
+
       const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
         {
-          model: "gpt-4",
-          messages: [...messages, newMessage],
+          contents: [{ parts: [{ text: newMessage.content }] }],
         },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
           },
         }
       );
 
-      const aiResponse = response.data.choices[0].message;
-      setMessages((prevMessages) => [...prevMessages, aiResponse]);
+      const candidates = response.data.candidates;
+      if (
+        candidates &&
+        candidates[0] &&
+        candidates[0].content &&
+        candidates[0].content.parts &&
+        candidates[0].content.parts[0]
+      ) {
+        const aiResponseText = candidates[0].content.parts[0].text;
+
+        const aiResponse = { role: "assistant", content: formatResponse(aiResponseText) };
+        setMessages((prevMessages) => [...prevMessages, aiResponse]);
+      } else {
+        console.error("Unexpected response structure:", response.data);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            role: "assistant",
+            content: "Sorry, I couldn't process your request.",
+          },
+        ]);
+      }
     } catch (error) {
-      console.error("Error calling ChatGPT API:", error);
+      console.error("Error calling Gemini API:", error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: "assistant", content: "Error: Unable to send message" },
+      ]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const formatResponse = (text) => {
+    text = text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+
+    text = text.replace(/(#{1,6})\s*(.*?)(?=\n|$)/g, (match, hashes, content) => {
+      const level = hashes.length;
+      return `<h${level}>${content.trim()}</h${level}>`;
+    });
+
+    return text;
   };
 
   const handleKeyPress = (e) => {
@@ -71,9 +104,15 @@ const AIAssistant = () => {
     }
   };
 
+  const handleSampleClick = (sampleText) => {
+    setInput(sampleText);
+    setShowSamples(false);
+    handleSendMessage();
+  };
+
   return (
     <Container maxWidth="md">
-       <Box
+      <Box
         sx={{
           textAlign: "left",
           mt: 2,
@@ -114,72 +153,101 @@ const AIAssistant = () => {
         <img src="./assets/Transparent-logo.png" alt="Logo" height={160} />
       </Box>
 
-      <Grid container spacing={2}>
-        {[
-          "Tell me about all the shots I play and which shots I need to practise?",
-          "Tell me about the playing areas I need to work on?",
-          "Tell me about my cover drive and its areas of improvements?",
-          "Walk me through how to play pace bowling?",
-        ].map((text, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <Card
-              sx={{
-                backgroundColor: "#F0F0F0",
-                cursor: "pointer",
-                borderRadius: 2,
-              }}
-            >
-              <CardContent>
-                <Typography
-                  variant="body1"
-                  sx={{ textAlign: "left", height: 80 }}
-                  component="p"
-                >
-                  {text}
-                </Typography>
-                <Box sx={{ textAlign: "right" }}>
-                  <IconButton sx={{ bgcolor: "#fff" }}>
-                    <LanguageOutlinedIcon />
-                  </IconButton>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {showSamples && (
+        <Grid container spacing={2}>
+          {[
+            "Tell me about all the shots I play and which shots I need to practise?",
+            "Tell me about the playing areas I need to work on?",
+            "Tell me about my cover drive and its areas of improvements?",
+            "Walk me through how to play pace bowling?",
+          ].map((text, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <Card
+                onClick={() => handleSampleClick(text)}
+                sx={{
+                  backgroundColor: "#F0F0F0",
+                  cursor: "pointer",
+                  borderRadius: 2,
+                }}
+              >
+                <CardContent>
+                  <Typography
+                    variant="body1"
+                    sx={{ textAlign: "left", height: 80 }}
+                    component="p"
+                  >
+                    {text}
+                  </Typography>
+                  <Box sx={{ textAlign: "right" }}>
+                    <IconButton sx={{ bgcolor: "#fff" }}>
+                      <LanguageOutlinedIcon />
+                    </IconButton>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
 
-      {/* Display messages */}
-      <Box sx={{ mt: 2, mb: 2, height: "60vh", overflowY: "auto" }}>
+      <Box sx={{ mt: 2, mb: 10, overflowY: "auto" }}>
         {messages.map((message, index) => (
           <Box
             key={index}
             sx={{
               display: "flex",
-              justifyContent: message.role === "user" ? "flex-end" : "flex-start",
+              justifyContent:
+                message.role === "user" ? "flex-end" : "flex-start",
               mb: 2,
             }}
           >
+            {message.role === "user" ? (
+              <Box
+                sx={{
+                  borderRadius: 5,
+                  mr: 0.5,
+                  width: 35,
+                  height: 35,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  transition: "background-color 0.3s", 
+                  "&:hover": {
+                    cursor: 'pointer',
+                    bgcolor: "#F0F0F0", 
+                  },
+                }}
+              >
+                <EditIcon sx={{ width: 20 }} />
+              </Box>
+            ) : (
+              <img src="./logo.png" alt="Logo" height={30} sx={{ mr: 0.5 }} />
+            )}
+
             <Typography
               variant="body1"
               sx={{
                 p: 2,
                 borderRadius: 2,
-                backgroundColor: message.role === "user" ? "#F0F0F0" : "#E3F2FD",
+                backgroundColor:
+                  message.role === "user" ? "#F0F0F0" : "#F0F0F0",
                 maxWidth: "70%",
               }}
-            >
-              {message.content}
-            </Typography>
+              component="div" // Use 'div' to allow HTML content rendering
+              dangerouslySetInnerHTML={{ __html: message.content }} // Render HTML safely
+            />
           </Box>
         ))}
         {isLoading && (
-          <Typography variant="body2" sx={{ fontStyle: "italic", textAlign: "center" }}>
-            AI is thinking...
+          <Typography
+            variant="body2"
+            sx={{ fontStyle: "italic", textAlign: "center" }}
+          >
+            AI Assistant is thinking...
           </Typography>
         )}
       </Box>
 
-      {/* Input box */}
       <Box
         sx={{
           display: "flex",
@@ -188,7 +256,7 @@ const AIAssistant = () => {
           width: "62.5%",
           alignItems: "center",
           backgroundColor: "#F0F0F0",
-          borderRadius: 20,
+          // borderRadius: 20,
         }}
       >
         <TextField
@@ -199,7 +267,6 @@ const AIAssistant = () => {
           onChange={handleInputChange}
           onKeyPress={handleKeyPress}
           sx={{
-            backgroundColor: "#F0F0F0",
             "& .MuiOutlinedInput-root": {
               "&:hover fieldset": {
                 border: "none",
