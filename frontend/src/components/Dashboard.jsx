@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Box, IconButton, Avatar, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider } from '@mui/material';
 import { VideoLibrary, PieChart, SportsSoccer, Payment, Person, Assistant, Logout } from '@mui/icons-material';
 import Visualization from './Visualization';
@@ -11,12 +11,30 @@ import { mainListItems } from "./NavListItems";
 import PersonIcon from "@mui/icons-material/Person";
 import ShareIcon from "@mui/icons-material/Share";
 import Reviews from "./Reviews";
+import axios from "axios";
 
 
 const drawerWidth = 240;
 
 const Dashboard = () => {
   const [selectedComponent, setSelectedComponent] = useState('VideoInsight');
+  const [userName, setUserName] = useState("");
+  const email = localStorage.getItem("userEmail");
+
+
+  useEffect(() => {
+    if (email) {
+      axios
+        .get(`http://localhost:3001/api/username?email=${email}`)
+        .then((response) => {
+          setUserName(response.data.firstName);
+        })
+        .catch((error) => {
+          console.error("Error fetching username:", error);
+        });
+    }
+  }, [email]);
+
 
   const handleMenuClick = (component) => {
     setSelectedComponent(component);
@@ -60,7 +78,8 @@ const Dashboard = () => {
       >
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Welcome Back, Daoud!
+            Welcome Back, <span> </span>
+              {userName || "User"}{"! "}
           </Typography>
           <IconButton  sx={{px:1, color: '#000'}}>
             <ShareIcon />

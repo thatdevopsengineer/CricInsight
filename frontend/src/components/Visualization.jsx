@@ -21,7 +21,7 @@ const Visualization = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [dates, setDates] = useState([]);
   const [shotsData, setShotsData] = useState({
-    date: new Date().toISOString(), // Store current date and time in ISO format
+    date: new Date().toISOString(), 
     email: localStorage.getItem("userEmail"),
     shots: [],
   });
@@ -57,7 +57,7 @@ const Visualization = () => {
 
       const updatedShotsData = {
         ...shotsData,
-        date: new Date().toISOString(), // Ensure current time is included when saving data
+        date: new Date().toISOString(), 
         shots: updatedShots,
       };
 

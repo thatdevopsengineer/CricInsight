@@ -90,6 +90,8 @@ const AIAssistant = () => {
 
   const formatResponse = (text) => {
     text = text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+    text = text.replace(/\*/g, "<br />");
+    text = text.replace(/\:/g, "<br/>");
     text = text.replace(/(#{1,6})\s*(.*?)(?=\n|$)/g, (match, hashes, content) => {
       const level = hashes.length;
       return `<h${level}>${content.trim()}</h${level}>`;
