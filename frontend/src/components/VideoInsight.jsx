@@ -13,36 +13,41 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useDropzone } from "react-dropzone";
 import CustomButton from "./CustomButton";
 import Lottie from 'react-lottie';
-import loaderAnimation from './Loader.json'; 
-import axios from 'axios';
+import loaderAnimation from './Loader.json';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 
-
-const VideoInsight = () => {
-  const [videoSrc, setVideoSrc] = useState("");
+const VideoEditor = () => {
+  const [videos, setVideos] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [videoDuration, setVideoDuration] = useState(0);
-  const [videoCurrentTime, setVideoCurrentTime] = useState(0);
-  const [loading, setLoading] = useState(false); 
-  const [blurred, setBlurred] = useState(false); 
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [blurred, setBlurred] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const timelineRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const userEmail = localStorage.getItem('userEmail');
 
-  const [videoData, setVideoData] = useState({
-    email: userEmail,
-  });
-
+  const addToHistory = (videos) => {
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(videos);
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  };
 
   const handleVideoUpload = (file) => {
     if (file) {
       setLoading(true);
       setBlurred(true);
       const url = URL.createObjectURL(file);
-      setVideoSrc(url);
+      const newVideos = [...videos, { src: url, duration: 0 }];
+      setVideos(newVideos);
+      addToHistory(newVideos);
       setIsPlaying(false);
-      
     }
   };
 
@@ -53,7 +58,7 @@ const VideoInsight = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: "video/*",
     onDrop,
-    noClick: true, 
+    noClick: true,
   });
 
   const handlePlayPause = () => {
@@ -95,95 +100,136 @@ const VideoInsight = () => {
   };
 
   const handleUndo = () => {
-    console.log("Undo clicked");
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
+      setVideos(history[historyIndex - 1]);
+    }
   };
 
   const handleRedo = () => {
-    console.log("Redo clicked");
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1);
+      setVideos(history[historyIndex + 1]);
+    }
   };
+
 
   const handleCut = () => {
     console.log("Cut clicked");
   };
 
   const handleAdd = () => {
-    console.log("Add clicked");
+    fileInputRef.current.click();
+  };
+
+  const handleFileInputChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      handleVideoUpload(file);
+    }
   };
 
   const handleDelete = () => {
-    console.log("Delete clicked");
-  };
-
-  const handleChange = (e) => {
-    setVideoData({ ...videoData, [e.target.name]: e.target.value });
+    if (selectedVideoIndex !== null) {
+      const newVideos = videos.filter((_, index) => index !== selectedVideoIndex);
+      setVideos(newVideos);
+      addToHistory(newVideos);
+      if (selectedVideoIndex === currentVideoIndex) {
+        setCurrentVideoIndex(prevIndex => prevIndex > 0 ? prevIndex - 1 : 0);
+      }
+      setSelectedVideoIndex(null);
+    }
   };
 
   const handleDone = async () => {
     console.log('Done clicked');
   };
-  
 
   useEffect(() => {
-    const drawFrames = () => {
-      if (canvasRef.current && videoRef.current) {
+    const drawTimeline = () => {
+      if (canvasRef.current && videos.length > 0) {
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
-        const frameCount = Math.floor(videoRef.current.duration / 0.5);
+        const totalDuration = videos.reduce((sum, video) => sum + video.duration, 0);
+        const frameCount = Math.floor(totalDuration / 0.5);
         const interval = 0.5;
+        const spacing = 1; // 1px spacing between videos
 
-        canvas.width = canvas.clientWidth;
+        canvas.width = Math.max(canvas.clientWidth, frameCount * 5 + (videos.length - 1) * spacing);  // Ensure the canvas is wide enough
         canvas.height = canvas.clientHeight;
 
-        let currentFrame = 0;
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
-        const drawFrame = () => {
-          if (currentFrame <= frameCount) {
-            videoRef.current.currentTime = currentFrame * interval;
-            videoRef.current.onseeked = () => {
-              // Draw frame
-              context.drawImage(
-                videoRef.current,
-                (currentFrame * canvas.width) / frameCount,
-                30,
-                canvas.width / frameCount,
-                canvas.height - 30
-              );
+        let currentTime = 0;
+        let currentX = 0;
 
-              // Draw time indicator for each second
-              if (currentFrame % 2 === 0) {
-                context.font = "12px Arial";
-                context.fillStyle = "black";
-                context.fillText(
-                  `${currentFrame / 2}s`,
-                  (currentFrame * canvas.width) / frameCount,
-                  20
-                );
-              }
+        videos.forEach((video, index) => {
+          const videoFrameCount = Math.floor(video.duration / interval);
+          const videoWidth = (videoFrameCount * canvas.width) / frameCount;
+          const x = currentX;
+          const y = 30;
+          const height = canvas.height - 30;
 
-              currentFrame++;
-              drawFrame();
-            };
-          } else {
-            setLoading(false);
-            setBlurred(false);
+          // Draw video block
+          context.fillStyle = index === currentVideoIndex ? "#4CAF50" : "#2196F3";
+          context.fillRect(x, y, videoWidth, height);
+
+          // Draw black border for selected video
+          if (index === selectedVideoIndex) {
+            context.strokeStyle = "black";
+            context.lineWidth = 2;
+            context.strokeRect(x, y, videoWidth, height);
           }
-        };
 
-        drawFrame();
+          // Draw time indicators
+          context.fillStyle = "black";
+          for (let i = 0; i <= videoFrameCount; i += 2) {
+            const indicatorX = x + (i * interval * videoWidth) / video.duration;
+            context.fillRect(indicatorX, 25, 1, 5);
+            if (i % 4 === 0) {
+              context.fillText(`${Math.floor(currentTime + i * interval)}s`, indicatorX, 20);
+            }
+          }
+
+          currentTime += video.duration;
+          currentX += videoWidth + spacing;
+        });
+
+        setLoading(false);
+        setBlurred(false);
       }
     };
 
-    if (videoSrc) {
-      videoRef.current.onloadedmetadata = () => {
-        setVideoDuration(videoRef.current.duration);
-        drawFrames();
-      };
-
-      videoRef.current.ontimeupdate = () => {
-        setVideoCurrentTime(videoRef.current.currentTime);
+    if (videos.length > 0) {
+      const video = document.createElement('video');
+      video.src = videos[videos.length - 1].src;
+      video.onloadedmetadata = () => {
+        setVideos(prevVideos => {
+          const newVideos = [...prevVideos];
+          newVideos[newVideos.length - 1].duration = video.duration;
+          return newVideos;
+        });
+        drawTimeline();
       };
     }
-  }, [videoSrc]);
+  }, [videos, currentVideoIndex, selectedVideoIndex]);
+
+  const handleTimelineClick = (event) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const spacing = 1;
+    
+    let accumulatedWidth = 0;
+    for (let i = 0; i < videos.length; i++) {
+      const videoWidth = (videos[i].duration / videos.reduce((sum, video) => sum + video.duration, 0)) * canvas.width;
+      if (x >= accumulatedWidth && x < accumulatedWidth + videoWidth) {
+        setSelectedVideoIndex(i);
+        break;
+      }
+      accumulatedWidth += videoWidth + spacing;
+    }
+  };
 
   return (
     <Box
@@ -198,7 +244,7 @@ const VideoInsight = () => {
         flexDirection="column"
         alignItems="center"
         width="100%"
-        sx={{ filter: blurred ? "blur(8px)" : "none" }} 
+        sx={{ filter: blurred ? "blur(8px)" : "none" }}
       >
         <Box
           display="flex"
@@ -207,36 +253,14 @@ const VideoInsight = () => {
           alignItems="center"
           mt={1}
         >
-          <Box
-            display="flex"
-            justifyContent="flex-start"
-            width="100%"
-            alignItems="center"
-          >
-            <Typography variant="h5" align="center" sx={{ fontWeight: "bold" }}>
-              Upload Videos
-            </Typography>
-          </Box>
-          <Box display="flex" justifyContent="flex-end" width="100%">
-            <input
-              accept="video/*"
-              style={{ display: "none" }}
-              id="video-upload"
-              type="file"
-              onChange={(e) => handleVideoUpload(e.target.files[0])}
-            />
-            <CustomButton
-              title={videoSrc ? "Done" : "Upload"}
-              IconComponent={FileUploadOutlinedIcon} // Pass the custom icon here
-              onClick={() => {
-                if (videoSrc) {
-                  handleDone(); // Trigger handleDone when "Done" is clicked
-                } else {
-                  document.getElementById("video-upload").click();
-                }
-              }}
-            />
-          </Box>
+          <Typography variant="h5" align="center" sx={{ fontWeight: "bold" }}>
+            Upload Videos
+          </Typography>
+          <CustomButton
+            title={videos.length > 0 ? "Done" : "Upload"}
+            IconComponent={FileUploadOutlinedIcon}
+            onClick={videos.length > 0 ? handleDone : handleAdd}
+          />
         </Box>
 
         <Box
@@ -247,21 +271,15 @@ const VideoInsight = () => {
           height="50%"
           bgcolor="#d3d3d3"
           controls
-          src={videoSrc}
+          src={videos[currentVideoIndex]?.src}
         />
         <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-          <IconButton onClick={handleRewind}>
-            <FastRewindIcon />
-          </IconButton>
+          <IconButton onClick={handleRewind}><FastRewindIcon /></IconButton>
           <IconButton onClick={handlePlayPause}>
             {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
           </IconButton>
-          <IconButton onClick={handleFastForward}>
-            <FastForwardIcon />
-          </IconButton>
-          <IconButton onClick={handleFullscreen}>
-            <FullscreenIcon />
-          </IconButton>
+          <IconButton onClick={handleFastForward}><FastForwardIcon /></IconButton>
+          <IconButton onClick={handleFullscreen}><FullscreenIcon /></IconButton>
         </Box>
 
         <Box
@@ -272,66 +290,42 @@ const VideoInsight = () => {
           mt={2}
           borderTop="1px solid #ccc"
         >
-          <Box
-            display="flex"
-            justifyContent="flex-start"
-            width="100%"
-            alignItems="center"
-          >
-            <IconButton onClick={handleUndo}>
-              <UndoIcon />
-            </IconButton>
-            <IconButton onClick={handleRedo}>
-              <RedoIcon />
-            </IconButton>
-            <IconButton onClick={handleCut}>
-              <ContentCutIcon />
-            </IconButton>
-            <IconButton onClick={handleAdd}>
-              <AddIcon />
-            </IconButton>
-            <IconButton onClick={handleDelete}>
-              <DeleteIcon />
-            </IconButton>
+          <Box display="flex" justifyContent="flex-start" width="100%" alignItems="center">
+            <IconButton onClick={handleUndo}><UndoIcon /></IconButton>
+            <IconButton onClick={handleRedo}><RedoIcon /></IconButton>
+            <IconButton onClick={handleCut}><ContentCutIcon /></IconButton>
+            <IconButton onClick={handleAdd}><AddIcon /></IconButton>
+            <IconButton onClick={handleDelete}><DeleteIcon /></IconButton>
           </Box>
         </Box>
-
+        
         <Box
+          ref={timelineRef}
           display="flex"
-          justifyContent="center"
+          justifyContent="flex-start"
           alignItems="center"
           mt={2}
           width="100%"
           height="100px"
           borderTop="1px solid #ccc"
           position="relative"
-          {...getRootProps()}
-          overflow="auto" 
+          overflow="auto"
           sx={{
             borderRadius: 1,
-            backgroundColor: isDragActive ? '#f0f0f0' : '#fff',
+            backgroundColor: '#fff',
             cursor: 'pointer',
-            whiteSpace: 'nowrap', 
+            whiteSpace: 'nowrap',
           }}
+          onClick={handleTimelineClick}
         >
-          <input {...getInputProps()} />
-          {videoSrc ? (
-            <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />
-          ) : (
-            <Typography
-              variant="h6"
-              color="textSecondary"
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              {isDragActive
-                ? "Drop the video here ..."
-                : "Drag and drop a video file here, or click to select one"}
-            </Typography>
+          <canvas ref={canvasRef} style={{ height: "100%" }} />
+          {videos.length === 0 && (
+            <Box {...getRootProps()} style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <input {...getInputProps()} />
+              <Typography variant="h6" color="textSecondary">
+                {isDragActive ? "Drop the video here ..." : "Drag and drop a video file here, or click to select one"}
+              </Typography>
+            </Box>
           )}
         </Box>
       </Box>
@@ -361,8 +355,16 @@ const VideoInsight = () => {
           </Typography>
         </Box>
       )}
+
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        accept="video/*"
+        onChange={handleFileInputChange}
+      />
     </Box>
   );
 };
 
-export default VideoInsight;
+export default VideoEditor;
