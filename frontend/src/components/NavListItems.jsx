@@ -26,6 +26,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         sx={{
           mx: 1,
           mb:0.5,
+          px: 2,
           borderRadius: 2,
           backgroundColor:
             selectedComponent === "VideoInsight" ? "white" : "inherit",
@@ -54,6 +55,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         sx={{
           mx: 1,
           mb:0.5,
+          px:2,
           borderRadius: 2,
           backgroundColor:
             selectedComponent === "Visualization" ? "white" : "inherit",
@@ -82,6 +84,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         sx={{
           mx: 1,
           mb:0.5,
+          px:2,
           borderRadius: 2,
           backgroundColor:
             selectedComponent === "PlayingAreas" ? "white" : "inherit",
@@ -110,6 +113,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         sx={{
           mx: 1,
           mb:0.5,
+          px:2,
           borderRadius: 2,
           backgroundColor:
             selectedComponent === "PaymentGateway" ? "white" : "inherit",
@@ -138,6 +142,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         sx={{
           mx: 1,
           mb:0.5,
+          px:2,
           borderRadius: 2,
           backgroundColor:
             selectedComponent === "AIAssistant" ? "white" : "inherit",
@@ -165,6 +170,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         onClick={() => handleMenuClick("Reviews")}
         sx={{
           mx: 1,
+          px:2,
           mb:0.5,
           borderRadius: 2,
           backgroundColor:
@@ -193,11 +199,13 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         onClick={handleLogout}
         sx={{
           mx: 1,
+          px:2,
           mb:0.5,
           bottom: 0,
           position: 'fixed',
           backgroundColor: 'inherit',
           color: 'white',
+          width:'16%'
         }}
       >
         <ListItemIcon>

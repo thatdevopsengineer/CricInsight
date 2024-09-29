@@ -78,7 +78,7 @@ const Dashboard = () => {
       >
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Welcome Back, <span> </span>
+            Welcome, <span> </span>
               {userName || "User"}{"! "}
           </Typography>
           <IconButton  sx={{px:1, color: '#000'}}>

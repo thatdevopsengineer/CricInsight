@@ -178,9 +178,9 @@ const AIAssistant = () => {
         <Grid container spacing={2}>
           {[
             "Tell me about all the shots I play and which shots I need to practise?",
+            "Walk me through how to play pace bowling?",
             "Tell me about the playing areas I need to work on?",
             "Tell me about my cover drive and its areas of improvements?",
-            "Walk me through how to play pace bowling?",
           ].map((text, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
               <Card
