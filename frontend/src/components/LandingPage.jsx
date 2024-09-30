@@ -68,7 +68,7 @@ export default function LandingPage() {
       <CssBaseline />
       <AppAppBar />
       <HomeSection imageSrc="./assets/home-image.png" /> 
-      <Experience />
+      <Experience id="experience" />
       <HowToUseSection />
       <WhyCricInsight />
     </ThemeProvider>

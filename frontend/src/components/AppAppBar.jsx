@@ -23,7 +23,7 @@ const logoStyle = {
 
 
 const navMenus = [
-  { label: "About", sectionId: "about" },
+  { label: "About", sectionId: "experience" }, // Change this to match the Experience section
   { label: "Services", sectionId: "services" },
   { label: "Reviews", sectionId: "reviews" },
   { label: "Contact", sectionId: "contact" },
