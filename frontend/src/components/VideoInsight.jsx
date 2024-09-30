@@ -15,6 +15,9 @@ import CustomButton from "./CustomButton";
 import Lottie from 'react-lottie';
 import loaderAnimation from './Loader.json';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const VideoEditor = () => {
   const [videos, setVideos] = useState([]);
@@ -40,7 +43,7 @@ const VideoEditor = () => {
   };
 
   const handleVideoUpload = (file) => {
-    if (file) {
+    if (file && file.type === "video/mp4") {
       setLoading(true);
       setBlurred(true);
       const url = URL.createObjectURL(file);
@@ -48,12 +51,16 @@ const VideoEditor = () => {
       setVideos(newVideos);
       addToHistory(newVideos);
       setIsPlaying(false);
+    } else {
+      toast.error('Please upload an MP4 video file.');
     }
   };
-
+  
+  
   const onDrop = (acceptedFiles) => {
     handleVideoUpload(acceptedFiles[0]);
   };
+  
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: "video/*",
@@ -239,6 +246,7 @@ const VideoEditor = () => {
       height="100%"
       sx={{ padding: 3 }}
     >
+                  <ToastContainer />
       <Box
         display="flex"
         flexDirection="column"
