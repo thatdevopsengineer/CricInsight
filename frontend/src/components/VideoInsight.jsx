@@ -328,7 +328,7 @@ const VideoEditor = () => {
         >
           <canvas ref={canvasRef} style={{ height: "100%" }} />
           {videos.length === 0 && (
-            <Box {...getRootProps()} style={{ width: '100%', height: '100%',backgroundColor:'red', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Box {...getRootProps()} style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <input {...getInputProps()} />
               <Typography variant="h6" color="textSecondary">
                 {isDragActive ? "Drop the video here ..." : "Drag and drop a video file here, or click to select one"}
