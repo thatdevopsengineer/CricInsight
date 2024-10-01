@@ -246,7 +246,7 @@ const VideoEditor = () => {
       height="100%"
       sx={{ padding: 3 }}
     >
-                  <ToastContainer />
+      <ToastContainer />
       <Box
         display="flex"
         flexDirection="column"
@@ -301,7 +301,7 @@ const VideoEditor = () => {
           <Box display="flex" justifyContent="flex-start" width="100%" alignItems="center">
             <IconButton onClick={handleUndo}><UndoIcon /></IconButton>
             <IconButton onClick={handleRedo}><RedoIcon /></IconButton>
-            <IconButton onClick={handleCut}><ContentCutIcon /></IconButton>
+            {/* <IconButton onClick={handleCut}><ContentCutIcon /></IconButton> */}
             <IconButton onClick={handleAdd}><AddIcon /></IconButton>
             <IconButton onClick={handleDelete}><DeleteIcon /></IconButton>
           </Box>
