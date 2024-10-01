@@ -2,6 +2,8 @@ import React from 'react';
 import { Box, Typography, Button, Grid } from '@mui/material';
 import { useInView } from 'react-intersection-observer';
 import { useSpring, animated } from '@react-spring/web';
+import Link from "@mui/material/Link";
+
 
 export default function WhyCricInsight() {
   const { ref, inView } = useInView({
@@ -42,6 +44,7 @@ export default function WhyCricInsight() {
                 Its adaptive learning feature offers personalized feedback, making it a must-have for cricket enthusiasts seeking to improve their game.
               </Typography>
               <Box>
+              <Link href="/login">
                 <Button
                   variant="contained"
                   sx={{
@@ -54,6 +57,7 @@ export default function WhyCricInsight() {
                 >
                   Try now
                 </Button>
+                </Link>
                 <Button
                   variant="contained"
                   sx={{
