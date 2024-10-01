@@ -193,19 +193,19 @@ const Login = () => {
               />
 
               <Grid container justifyContent={"flex-end"} sx={{ mt: 2 }}>
-                <Link
-                  href="/forgot-password"
-                  variant="body2"
-                  sx={{
-                    textTransform: "none",
-                    color: "#000",
-                    textDecoration: "none",
-                    // mr: 4,
-                    fontWeight: 500,
-                  }}
-                >
-                  Forget Password?
-                </Link>
+              <Link
+                href="/forgot-password"
+                variant="body2"
+                sx={{
+                  textTransform: "none",
+                  color: "#000",
+                  textDecoration: "none",
+                  fontWeight: 500,
+                }}
+              >
+                Forget Password?
+              </Link>
+
               </Grid>
 
               <Button

@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const FormDataModel = require('./models/FormData');
 const UserModel = require('./models/FormData'); 
 const { OAuth2Client } = require('google-auth-library');
+const nodemailer = require('nodemailer'); 
+const router = express.Router();
 
 
 const app = express();
@@ -55,6 +57,46 @@ app.post('/login', (req, res) => {
     .catch(err => res.status(500).json(err));
 });
 
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await FormDataModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+
+    const resetToken = generateResetToken(); 
+    user.resetToken = resetToken;
+    await user.save();
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Password Reset',
+      text: `You requested a password reset. Click the link below to reset your password:\n\nhttp://localhost:3000/reset-password/${resetToken}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error sending password reset email:", error);
+    res.status(500).json({ success: false, message: "An error occurred. Please try again." });
+  }
+});
+
+function generateResetToken() {
+  // Implement your token generation logic here (e.g., using crypto or JWT)
+  return 'some_generated_token';
+}
 
 // Google login
 const client = new OAuth2Client('84137165849-n5rpca9u1cfmerfb7um368peoc94doq5.apps.googleusercontent.com');
