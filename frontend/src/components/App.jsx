@@ -6,7 +6,7 @@ import LandingPage from './LandingPage';
 import Dashboard from './Dashboard';
 import ForgotPassword from './ForgetPassword';
 import NotFound from './PageNotFound';
-
+import Visualization from './Visualization';
 
 const PrivateRoute = ({ element }) => {
   const userEmail = localStorage.getItem("userEmail");
@@ -24,8 +24,9 @@ function App() {
           <Route path="/old-dashboard" element={<OldDashboard />} />
           <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="404" element={<NotFound />} /> {/* Catch-all route for undefined paths */}
-          <Route path="*" element={<NotFound />} /> {/* Catch-all route for undefined paths */}
+          {/* <Route path="/dashboard/visualization" element={<Visualization />} /> */}
+          <Route path="404" element={<NotFound />} /> 
+          <Route path="*" element={<NotFound />} /> 
         </Routes>
       </BrowserRouter>
     </div>

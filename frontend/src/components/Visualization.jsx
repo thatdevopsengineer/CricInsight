@@ -9,12 +9,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 const data = [
-  { name: "Cover Drive", value: 14, color: "#0d0a1c" },
-  { name: "Cut", value: 30, color: "#332971" },
-  { name: "Flick", value: 12, color: "#5948c6" },
-  { name: "Sweep", value: 24, color: "#6c58f1" },
-  { name: "Pull", value: 8, color: "#46399c" },
-  { name: "Others", value: 13, color: "#201a47" },
+  { name: "Cut", value: 433, color: "#332971" },
+  { name: "Pull", value: 173, color: "#46399c" },
+  { name: "Cover Drive", value: 1040, color: "#0d0a1c" },
+  { name: "Straight Drive", value: 543, color: "#201a47" },
+  { name: "Flick", value: 1407, color: "#5948c6" },
+  // { name: "Sweep", value: 24, color: "#6c58f1" },
 ];
 
 const Visualization = () => {

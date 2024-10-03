@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { AppBar, Toolbar, Typography, Box, IconButton, Avatar, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, } from "@mui/material";
-import { VideoLibrary, PieChart, SportsSoccer, Payment, Person, Assistant, Logout, } from "@mui/icons-material";
+import { AppBar, Toolbar, Typography, Box, IconButton, Avatar, Drawer, List, Divider } from "@mui/material";
+import { Person } from "@mui/icons-material";
 import Visualization from "./Visualization";
 import VideoInsight from "./VideoInsight";
 import PaymentGateway from "./PaymentGateway";
 import PlayingAreas from "./PlayingAreas";
 import Profile from "./Profile";
 import AIAssistant from "./AIAssistant";
-import { mainListItems } from "./NavListItems";
-import PersonIcon from "@mui/icons-material/Person";
 import Reviews from "./Reviews";
+import { mainListItems } from "./NavListItems";
 import axios from "axios";
-
+import VideoEditor from "./VideoInsight"; // Import the VideoEditor component
 
 const drawerWidth = 240;
 
@@ -80,18 +79,17 @@ const Dashboard = () => {
       >
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Welcome, <span> </span>
-            {userName || "User"}
-            {"! "}
+            Welcome, {userName || "User"}!
           </Typography>
+
           <IconButton
             onClick={() => handleMenuClick("PaymentGateway")}
             sx={{ color: "#000" }}
           >
-            <img src="/premium20.png" alt="Logo" sx={{ width: 2, height: 2 }} />
+            <img src="/premium20.png" alt="Payment" sx={{ width: 2, height: 2 }} />
           </IconButton>
           <IconButton sx={{ px: 1, color: "#000" }}>
-            <PersonIcon onClick={() => handleMenuClick("Profile")} />
+            <Person onClick={() => handleMenuClick("Profile")} />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -108,6 +106,11 @@ const Dashboard = () => {
         {selectedComponent === "Profile" && <Profile />}
         {selectedComponent === "AIAssistant" && <AIAssistant />}
         {selectedComponent === "Reviews" && <Reviews />}
+        
+        {/* Render VideoEditor and pass the function to switch to Visualization */}
+        {selectedComponent === "VideoEditor" && (
+          <VideoEditor onDone={() => setSelectedComponent("Visualization")} />
+        )}
       </Box>
     </Box>
   );

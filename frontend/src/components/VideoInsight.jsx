@@ -17,7 +17,7 @@ import loaderAnimation from './Loader.json';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useNavigate } from 'react-router-dom';  // Import useNavigate
 
 const VideoEditor = () => {
   const [videos, setVideos] = useState([]);
@@ -148,8 +148,18 @@ const VideoEditor = () => {
     }
   };
 
-  const handleDone = async () => {
+  // const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // Initialize navigate
+
+  const handleDone = () => {
     console.log('Done clicked');
+    // setLoading(true);  // Start showing the loader
+
+    // // Set a timeout for 8 minutes and 42 seconds (522000 ms)
+    // setTimeout(() => {
+    //   setLoading(false);  // Stop showing the loader
+    //   // navigate('/dashboard/visualization'); 
+    // }, 5000);
   };
 
   useEffect(() => {
@@ -376,3 +386,5 @@ const VideoEditor = () => {
 };
 
 export default VideoEditor;
+
+
