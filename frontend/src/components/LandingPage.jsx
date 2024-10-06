@@ -13,6 +13,8 @@ import HomeSection from './HomeSection';
 import Experience from './Experience';
 import HowToUseSection from './HowToUse';
 import WhyCricInsight from './WhyCricInsight';
+import WhatWeOffer from './WhatWeOffer';
+
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
   return (
@@ -71,6 +73,7 @@ export default function LandingPage() {
       <Experience id="experience" />
       <HowToUseSection />
       <WhyCricInsight />
+      <WhatWeOffer />
     </ThemeProvider>
   );
 }
