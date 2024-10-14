@@ -24,6 +24,20 @@ const testimonials = [
     rating: 5,
     quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.'
   },
+  {
+    name: 'Felix Thönnessen',
+    role: 'MANAGER',
+    image: '/api/placeholder/40/40',
+    rating: 5,
+    quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.'
+  },
+  {
+    name: 'Felix Thönnessen',
+    role: 'MANAGER',
+    image: '/api/placeholder/40/40',
+    rating: 5,
+    quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.'
+  },
 ];
 
 const TestimonialSlider = () => {
@@ -38,12 +52,12 @@ const TestimonialSlider = () => {
   };
 
   return (
-    <Box sx={{ textAlign: 'center', py: 8, px: 2 }}>
-      <Typography variant="subtitle1" color="error" gutterBottom>
-        Testamonials
+    <Box sx={{ textAlign: 'center', py: 8, px: 2, mx:4 }}>
+      <Typography variant="body" color="#030D40" sx={{fontWeight: 'bold'}}>
+      Testamonials
       </Typography>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
-        What Our Customer Says
+        What Our Customer Says?
       </Typography>
 
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 4 }}>
@@ -51,7 +65,7 @@ const TestimonialSlider = () => {
           <ChevronLeft size={40} />
         </IconButton>
 
-        <Box sx={{ display: 'flex', gap: 2, mx: 4 }}>
+        <Box sx={{ display: 'flex', gap: 4, mx: 4 }}>
           {[-1, 0, 1].map((offset) => {
             const index = (currentIndex + offset + testimonials.length) % testimonials.length;
             const testimonial = testimonials[index];
@@ -66,6 +80,7 @@ const TestimonialSlider = () => {
                   zIndex: offset === 0 ? 2 : 1,
                   opacity: offset === 0 ? 1 : 0.7,
                   transition: 'all 0.3s ease',
+                  boxShadow: 5
                 }}
               >
                 <Typography variant="h4" color="#030D40" sx={{ mb: 2 }}>
@@ -102,7 +117,7 @@ const TestimonialSlider = () => {
         </IconButton>
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
         {testimonials.map((_, index) => (
           <Box
             key={index}
