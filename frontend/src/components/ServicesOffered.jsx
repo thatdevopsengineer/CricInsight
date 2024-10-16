@@ -1,5 +1,6 @@
 import React from "react";
 import { Grid, Card, Typography, Box } from "@mui/material";
+import { motion } from "framer-motion";
 
 const services = [
   {
@@ -21,27 +22,54 @@ const services = [
     title: "Field Calculation",
     description: "Visualize shot distribution, analyzing fielding positions and percentages with precision.",
     imgSrc: './Hockey Ball.png'
-    },
+  },
 ];
+
+const MotionCard = motion(Card);
+const MotionTypography = motion(Typography);
+const MotionImg = motion.img;
 
 const Services = () => {
   return (
-    <Box sx={{ textAlign: "center", mt: 5, px: 2 }}>
-      <Typography variant="body" color="#030D40" sx={{fontWeight: 'bold'}}>
+    <Box sx={{ textAlign: "center", mx: 7, px: 2 }}>
+      <MotionTypography
+        variant="body"
+        color="#030D40"
+        sx={{fontWeight: 'bold'}}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         Our Services
-      </Typography>
-      <Typography variant="h4" fontWeight="bold" gutterBottom>
+      </MotionTypography>
+      <MotionTypography
+        variant="h4"
+        fontWeight="bold"
+        gutterBottom
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         What We Offer?
-      </Typography>
+      </MotionTypography>
 
       <Grid container spacing={3} justifyContent="center" alignItems="stretch">
         <Grid item xs={12} md={3} container direction="column" spacing={3}>
           {services.slice(0, 2).map((service, index) => (
             <Grid item key={index}>
-              <Card sx={{ p: 3, height: '100%', boxShadow: 'none',display: 'flex', flexDirection: 'column', background: '#F3F3F3', justifyContent: 'flex-start', alignItems: 'flex-start', textAlign: 'left' }}>
-                <img
-                src={service.imgSrc}
-                style={{filter: "brightness(0) saturate(100%) invert(7%) sepia(82%) saturate(3872%) hue-rotate(236deg) brightness(93%) contrast(107%)"}}
+              <MotionCard
+                sx={{ p: 3, height: '100%', boxShadow: 'none', display: 'flex', flexDirection: 'column', background: '#F3F3F3', justifyContent: 'flex-start', alignItems: 'flex-start', textAlign: 'left' }}
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <MotionImg
+                  src={service.imgSrc}
+                  style={{filter: "brightness(0) saturate(100%) invert(7%) sepia(82%) saturate(3872%) hue-rotate(236deg) brightness(93%) contrast(107%)"}}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.2 + 0.2 }}
                 />
                 <Typography variant="h6" fontWeight="bold" gutterBottom marginTop={1}>
                   {service.title}
@@ -49,30 +77,47 @@ const Services = () => {
                 <Typography variant="body2" color="textSecondary">
                   {service.description}
                 </Typography>
-              </Card>
+              </MotionCard>
             </Grid>
           ))}
         </Grid>
 
         <Grid item xs={12} md={3} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <Card sx={{ p: 2, height: '80%',display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 2,backgroundColor: '#030D40' }}>
-          <img
+          <MotionCard
+            sx={{ p: 2, height: '80%', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 2, backgroundColor: '#030D40' }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            whileHover={{ scale: 1.05 }}
+          >
+            <MotionImg
               src='./logo.png'
               alt="CricInsight Logo"
               style={{ width: "90%", height: "auto", margin: 8 }}
-              
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
             />
-          </Card>
+          </MotionCard>
         </Grid>
 
         <Grid item xs={12} md={3} container direction="column" spacing={3}>
           {services.slice(2, 4).map((service, index) => (
             <Grid item key={index}>
-              <Card sx={{ p: 3, height: '100%', display: 'flex',  boxShadow: 'none', flexDirection: 'column', background: '#F3F3F3',justifyContent: 'flex-start', alignItems: 'flex-start', textAlign: 'left' }}>
-              <img
-                src={service.imgSrc}
-                sx={{mb:1}}
-                style={{filter: "brightness(0) saturate(100%) invert(7%) sepia(82%) saturate(3872%) hue-rotate(236deg) brightness(93%) contrast(107%)"}}
+              <MotionCard
+                sx={{ p: 3, height: '100%', display: 'flex', boxShadow: 'none', flexDirection: 'column', background: '#F3F3F3', justifyContent: 'flex-start', alignItems: 'flex-start', textAlign: 'left' }}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.2 + 0.4 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <MotionImg
+                  src={service.imgSrc}
+                  sx={{mb:1}}
+                  style={{filter: "brightness(0) saturate(100%) invert(7%) sepia(82%) saturate(3872%) hue-rotate(236deg) brightness(93%) contrast(107%)"}}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.2 + 0.6 }}
                 />
                 <Typography variant="h6" fontWeight="bold" gutterBottom>
                   {service.title}
@@ -80,7 +125,7 @@ const Services = () => {
                 <Typography variant="body2" color="textSecondary">
                   {service.description}
                 </Typography>
-              </Card>
+              </MotionCard>
             </Grid>
           ))}
         </Grid>
