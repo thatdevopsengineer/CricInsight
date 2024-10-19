@@ -61,7 +61,7 @@ const TestimonialSlider = () => {
   return (
     <MotionBox 
       ref={ref}
-      sx={{ textAlign: 'center', py: 8, px: 2, mx: 4 }}
+      sx={{ textAlign: 'center', py: 8, px: 2, mx: 4, mt : 4 }}
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.8 }}
