@@ -144,7 +144,6 @@ const ContactForm = () => {
                       '&:hover': { bgcolor: '#030D40' } 
                     }}
                     variants={itemVariants}
-                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     Send
@@ -157,7 +156,7 @@ const ContactForm = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                   <Phone color="#fff" size={35} style={{ marginRight: '12px', background: '#030D40', padding: 8, borderRadius: 50 }} />
                   <Box>
-                    <Typography variant="subtitle1" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold">
                       + 1800 145 276
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -168,7 +167,7 @@ const ContactForm = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Mail color="#fff" size={35} style={{ marginRight: '12px', background: '#030D40', padding: 8, borderRadius: 50 }}  />
                   <Box>
-                    <Typography variant="subtitle1" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold">
                       cricinsight@gmail.com
                     </Typography>
                     <Typography variant="body2" color="text.secondary">

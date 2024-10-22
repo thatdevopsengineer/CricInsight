@@ -7,36 +7,36 @@ const testimonials = [
   {
     name: 'Melvin Lamberty',
     role: 'Right Handed Batsman',
-    image: '/api/placeholder/40/40',
+    image: './melvin.png',
     rating: 4,
     quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.'
   },
   {
     name: 'Sandhya Mer',
     role: 'Left Handed Batsman',
-    image: '/api/placeholder/40/40',
+    image: './sandha.png',
     rating: 5,
     quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.'
   },
   {
     name: 'Felix Thönnessen',
     role: 'Batting Alrounder',
-    image: '/api/placeholder/40/40',
+    image: './felix.png',
     rating: 3,
     quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.'
   },
   {
     name: 'Felix Thönnessen',
     role: 'Left Handed Batsman',
-    image: '/api/placeholder/40/40',
+    image: './felix.png',
     rating: 5,
     quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.'
   },
   {
-    name: 'Felix Thönnessen',
-    role: 'Right Handed Batsman',
-    image: '/api/placeholder/40/40',
-    rating: 4,
+    name: 'Sandhya Mer',
+    role: 'Left Handed Batsman',
+    image: './sandha.png',
+    rating: 2,
     quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.'
   },
 ];
