@@ -17,6 +17,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
   const handleLogout = () => {
     localStorage.removeItem('userEmail');
     navigate('/login');
+    window.location.reload(); 
   };
 
   return (
