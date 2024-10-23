@@ -16,7 +16,7 @@ import WhyCricInsight from './WhyCricInsight';
 import WhatWeOffer from './ServicesOffered';
 import TestimonialSlider from './Testimonials';
 import ContactForm from './ContactUs';
-
+import Footer from './Footer';
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
   return (
@@ -78,6 +78,7 @@ export default function LandingPage() {
       <WhatWeOffer />
       <TestimonialSlider/>
       <ContactForm />
+      <Footer/>
     </ThemeProvider>
   );
 }
