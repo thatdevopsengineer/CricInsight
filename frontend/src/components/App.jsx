@@ -10,27 +10,47 @@ import Visualization from './Visualization';
 
 const PrivateRoute = ({ element }) => {
   const userEmail = localStorage.getItem("userEmail");
-  return userEmail ? element : <Navigate to="/404" />;
+  return userEmail ? element : <Navigate to="/login" />;
 };
 
-function App() {
+const App = () => {
+  const userEmail = localStorage.getItem("userEmail");
+
   return (
     <div style={{ marginTop: '-3.5rem' }}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/old-dashboard" element={<OldDashboard />} />
-          <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          {/* <Route path="/dashboard/visualization" element={<Visualization />} /> */}
+          <Route 
+            path="/" 
+            element={userEmail ? <Navigate to="/dashboard" /> : <LandingPage />} 
+          />
+          <Route 
+            path="/register" 
+            element={userEmail ? <Navigate to="/dashboard" /> : <Register />} 
+          />
+          <Route 
+            path="/login" 
+            element={userEmail ? <Navigate to="/dashboard" /> : <Login />} 
+          />
+          <Route 
+            path="/old-dashboard" 
+            element={userEmail ? <Navigate to="/dashboard" /> : <OldDashboard />} 
+          />
+          <Route 
+            path="/dashboard" 
+            element={<PrivateRoute element={<Dashboard />} />} 
+          />
+          <Route 
+            path="/forgot-password" 
+            element={userEmail ? <Navigate to="/dashboard" /> : <ForgotPassword />} 
+          />
+          {/* <Route path="/dashboard/visualization" element={<PrivateRoute element={<Visualization />} />} /> */}
           <Route path="404" element={<NotFound />} /> 
-          <Route path="*" element={<NotFound />} /> 
+          <Route path="*" element={<Navigate to={userEmail ? "/dashboard" : "/404"} />} />
         </Routes>
       </BrowserRouter>
     </div>
   );
-}
+};
 
 export default App;
