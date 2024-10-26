@@ -9,15 +9,21 @@ import PsychologyIcon from "@mui/icons-material/Psychology";
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import LogoutIcon from "@mui/icons-material/Logout";
 import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-export const mainListItems = (handleMenuClick, selectedComponent) => {
+export const mainListItems = (handleMenuClick) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname.split('/').pop();
 
   const handleLogout = () => {
     localStorage.removeItem('userEmail');
     navigate('/login');
     window.location.reload(); 
+  };
+
+  const isSelected = (path) => {
+    return currentPath === path;
   };
 
   return (
@@ -26,12 +32,11 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         onClick={() => handleMenuClick("VideoInsight")}
         sx={{
           mx: 1,
-          mb:0.5,
+          mb: 0.5,
           px: 2,
           borderRadius: 2,
-          backgroundColor:
-            selectedComponent === "VideoInsight" ? "white" : "inherit",
-          color: selectedComponent === "VideoInsight" ? "#030947" : "white",
+          backgroundColor: isSelected('video-insights') ? "white" : "inherit",
+          color: isSelected('video-insights') ? "#030947" : "white",
           "&:hover": {
             backgroundColor: "white",
             color: "#030947",
@@ -44,7 +49,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         <ListItemIcon>
           <UploadFileIcon
             sx={{
-              color: selectedComponent === "VideoInsight" ? "#030947" : "white",
+              color: isSelected('video-insights') ? "#030947" : "white",
             }}
           />
         </ListItemIcon>
@@ -55,12 +60,11 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         onClick={() => handleMenuClick("Visualization")}
         sx={{
           mx: 1,
-          mb:0.5,
-          px:2,
+          mb: 0.5,
+          px: 2,
           borderRadius: 2,
-          backgroundColor:
-            selectedComponent === "Visualization" ? "white" : "inherit",
-          color: selectedComponent === "Visualization" ? "#030947" : "white",
+          backgroundColor: isSelected('visualization') ? "white" : "inherit",
+          color: isSelected('visualization') ? "#030947" : "white",
           "&:hover": {
             backgroundColor: "white",
             color: "#030947",
@@ -73,7 +77,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         <ListItemIcon>
           <AutoGraphIcon
             sx={{
-              color: selectedComponent === "Visualization" ? "#030947" : "white",
+              color: isSelected('visualization') ? "#030947" : "white",
             }}
           />
         </ListItemIcon>
@@ -84,12 +88,11 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         onClick={() => handleMenuClick("PlayingAreas")}
         sx={{
           mx: 1,
-          mb:0.5,
-          px:2,
+          mb: 0.5,
+          px: 2,
           borderRadius: 2,
-          backgroundColor:
-            selectedComponent === "PlayingAreas" ? "white" : "inherit",
-          color: selectedComponent === "PlayingAreas" ? "#030947" : "white",
+          backgroundColor: isSelected('playing-areas') ? "white" : "inherit",
+          color: isSelected('playing-areas') ? "#030947" : "white",
           "&:hover": {
             backgroundColor: "white",
             color: "#030947",
@@ -102,7 +105,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         <ListItemIcon>
           <SportsCricketIcon
             sx={{
-              color: selectedComponent === "PlayingAreas" ? "#030947" : "white",
+              color: isSelected('playing-areas') ? "#030947" : "white",
             }}
           />
         </ListItemIcon>
@@ -113,12 +116,11 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         onClick={() => handleMenuClick("PaymentGateway")}
         sx={{
           mx: 1,
-          mb:0.5,
-          px:2,
+          mb: 0.5,
+          px: 2,
           borderRadius: 2,
-          backgroundColor:
-            selectedComponent === "PaymentGateway" ? "white" : "inherit",
-          color: selectedComponent === "PaymentGateway" ? "#030947" : "white",
+          backgroundColor: isSelected('payment') ? "white" : "inherit",
+          color: isSelected('payment') ? "#030947" : "white",
           "&:hover": {
             backgroundColor: "white",
             color: "#030947",
@@ -131,7 +133,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         <ListItemIcon>
           <PsychologyIcon
             sx={{
-              color: selectedComponent === "PaymentGateway" ? "#030947" : "white",
+              color: isSelected('payment') ? "#030947" : "white",
             }}
           />
         </ListItemIcon>
@@ -142,12 +144,11 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         onClick={() => handleMenuClick("AIAssistant")}
         sx={{
           mx: 1,
-          mb:0.5,
-          px:2,
+          mb: 0.5,
+          px: 2,
           borderRadius: 2,
-          backgroundColor:
-            selectedComponent === "AIAssistant" ? "white" : "inherit",
-          color: selectedComponent === "AIAssistant" ? "#030947" : "white",
+          backgroundColor: isSelected('ai-assistant') ? "white" : "inherit",
+          color: isSelected('ai-assistant') ? "#030947" : "white",
           "&:hover": {
             backgroundColor: "white",
             color: "#030947",
@@ -160,7 +161,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         <ListItemIcon>
           <SupportAgentIcon
             sx={{
-              color: selectedComponent === "AIAssistant" ? "#030947" : "white",
+              color: isSelected('ai-assistant') ? "#030947" : "white",
             }}
           />
         </ListItemIcon>
@@ -171,12 +172,11 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         onClick={() => handleMenuClick("Reviews")}
         sx={{
           mx: 1,
-          px:2,
-          mb:0.5,
+          px: 2,
+          mb: 0.5,
           borderRadius: 2,
-          backgroundColor:
-            selectedComponent === "Reviews" ? "white" : "inherit",
-          color: selectedComponent === "Reviews" ? "#030947" : "white",
+          backgroundColor: isSelected('reviews') ? "white" : "inherit",
+          color: isSelected('reviews') ? "#030947" : "white",
           "&:hover": {
             backgroundColor: "white",
             color: "#030947",
@@ -189,7 +189,7 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         <ListItemIcon>
           <RateReviewOutlinedIcon
             sx={{
-              color: selectedComponent === "Reviews" ? "#030947" : "white",
+              color: isSelected('reviews') ? "#030947" : "white",
             }}
           />
         </ListItemIcon>
@@ -200,13 +200,13 @@ export const mainListItems = (handleMenuClick, selectedComponent) => {
         onClick={handleLogout}
         sx={{
           mx: 1,
-          px:2,
-          mb:0.5,
+          px: 2,
+          mb: 0.5,
           bottom: 0,
           position: 'fixed',
           backgroundColor: 'inherit',
           color: 'white',
-          width:'16%'
+          width: '16%'
         }}
       >
         <ListItemIcon>

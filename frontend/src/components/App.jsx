@@ -6,7 +6,6 @@ import LandingPage from './LandingPage';
 import Dashboard from './Dashboard';
 import ForgotPassword from './ForgetPassword';
 import NotFound from './PageNotFound';
-import Visualization from './Visualization';
 
 const PrivateRoute = ({ element }) => {
   const userEmail = localStorage.getItem("userEmail");
@@ -36,15 +35,11 @@ const App = () => {
             path="/old-dashboard" 
             element={userEmail ? <Navigate to="/dashboard" /> : <OldDashboard />} 
           />
-          <Route 
-            path="/dashboard" 
-            element={<PrivateRoute element={<Dashboard />} />} 
-          />
+          <Route path="/dashboard/*" element={<PrivateRoute element={<Dashboard />} />} />
           <Route 
             path="/forgot-password" 
             element={userEmail ? <Navigate to="/dashboard" /> : <ForgotPassword />} 
           />
-          {/* <Route path="/dashboard/visualization" element={<PrivateRoute element={<Visualization />} />} /> */}
           <Route path="404" element={<NotFound />} /> 
           <Route path="*" element={<Navigate to={userEmail ? "/dashboard" : "/404"} />} />
         </Routes>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { AppBar, Toolbar, Typography, Box, IconButton, Avatar, Drawer, List, Divider } from "@mui/material";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { AppBar, Toolbar, Typography, Box, IconButton, Drawer, List, Divider } from "@mui/material";
 import { Person } from "@mui/icons-material";
 import Visualization from "./Visualization";
 import VideoInsight from "./VideoInsight";
@@ -10,13 +11,14 @@ import AIAssistant from "./AIAssistant";
 import Reviews from "./Reviews";
 import { mainListItems } from "./NavListItems";
 import axios from "axios";
-import VideoEditor from "./VideoInsight"; // Import the VideoEditor component
+import NotFoundPage from "./PageNotFound";
 
 const drawerWidth = 240;
 
 const Dashboard = () => {
-  const [selectedComponent, setSelectedComponent] = useState("VideoInsight");
   const [userName, setUserName] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
   const email = localStorage.getItem("userEmail");
 
   useEffect(() => {
@@ -32,8 +34,26 @@ const Dashboard = () => {
     }
   }, [email]);
 
+  useEffect(() => {
+    // Redirect to video-insights by default if we're at /dashboard
+    if (location.pathname === '/dashboard') {
+      navigate('video-insights');
+    }
+  }, [location.pathname, navigate]);
+
   const handleMenuClick = (component) => {
-    setSelectedComponent(component);
+    const routeMap = {
+      VideoInsight: 'video-insights',
+      Visualization: 'visualization',
+      PlayingAreas: 'playing-areas',
+      PaymentGateway: 'payment',
+      Profile: 'profile',
+      AIAssistant: 'ai-assistant',
+      Reviews: 'reviews',
+      // VideoInsight: 'video-editor'
+    };
+
+    navigate(routeMap[component]);
   };
 
   return (
@@ -54,14 +74,14 @@ const Dashboard = () => {
       >
         <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
           <img
-            src="./assets/home-logo.png"
+            src="../../assets/home-logo.png"
             alt="Logo"
             style={{ width: "80%", maxWidth: 160 }}
           />
         </Box>
         <Divider />
         <List component="nav" sx={{ flexGrow: 1 }}>
-          {mainListItems(handleMenuClick, selectedComponent)}
+          {mainListItems(handleMenuClick, location.pathname.split('/').pop())}
         </List>
         <Divider />
       </Drawer>
@@ -99,18 +119,20 @@ const Dashboard = () => {
         component="main"
         sx={{ flexGrow: 1, p: 3, mt: 11, minHeight: "100vh" }}
       >
-        {selectedComponent === "VideoInsight" && <VideoInsight />}
-        {selectedComponent === "Visualization" && <Visualization />}
-        {selectedComponent === "PlayingAreas" && <PlayingAreas />}
-        {selectedComponent === "PaymentGateway" && <PaymentGateway />}
-        {selectedComponent === "Profile" && <Profile />}
-        {selectedComponent === "AIAssistant" && <AIAssistant />}
-        {selectedComponent === "Reviews" && <Reviews />}
-        
-        {/* Render VideoEditor and pass the function to switch to Visualization */}
-        {selectedComponent === "VideoEditor" && (
-          <VideoEditor onDone={() => setSelectedComponent("Visualization")} />
-        )}
+        <Routes>
+          <Route path="video-insights" element={<VideoInsight />} />
+          <Route path="visualization" element={<Visualization />} />
+          <Route path="playing-areas" element={<PlayingAreas />} />
+          <Route path="payment" element={<PaymentGateway />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="ai-assistant" element={<AIAssistant />} />
+          <Route path="reviews" element={<Reviews />} />
+          <Route path="*" element={<NotFoundPage />} />
+          <Route 
+            path="video-insights" 
+            element={<VideoInsight onDone={() => handleMenuClick("Visualization")} />} 
+          />
+        </Routes>
       </Box>
     </Box>
   );

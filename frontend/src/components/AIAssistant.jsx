@@ -184,7 +184,7 @@ const AIAssistant = () => {
             How can I help you today?
           </Typography>
         </Box>
-        <img src="./assets/Transparent-logo.png" alt="Logo" height={160} />
+        <img src="../../assets/Transparent-logo.png" alt="Logo" height={160} />
       </Box>
 
 
@@ -334,7 +334,7 @@ const AIAssistant = () => {
               </Box>
             ) : (
               <Box sx={{ display: 'flex' }}>
-                <img src="./logo.png" alt="Logo" height={30} sx={{ mr: 0.5 }} />
+                <img src="../../logo.png" alt="Logo" height={30} sx={{ mr: 0.5 }} />
                 <Typography
                   variant="body1"
                   dangerouslySetInnerHTML={{ __html: message.content }}
