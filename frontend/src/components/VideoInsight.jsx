@@ -20,11 +20,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-// import { fromEnv } from '@aws-sdk/credential-providers';
 
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 const s3Client = new S3Client({
-  region: import.meta.env.VITE_AWS_REGION || 'us-west-2', // fallback to default region
+  region: import.meta.env.VITE_AWS_REGION,
   credentials: {
     accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
     secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
@@ -168,62 +167,55 @@ const VideoEditor = () => {
     }
   };
 
-  // const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate()
 
   const handleDoneClick = async () => {
-  
     try {
       setLoading(true);
+      setBlurred(true);
       setUploading(true);
-      console.log(import.meta.env.VITE_AWS_REGION); 
+  
+  
+      // Fetch user details based on email
+      const email = localStorage.getItem('userEmail');
 
   
-      // Fetch user details from backend
-      const userResponse = await axios.get(`/api/username?email=${userEmail}`);
-      const { firstName } = userResponse.data;
-  
-      // Upload each video to S3
+      // Upload each video
       const uploadPromises = videos.map(async (videoFile, index) => {
-        // Fetch the blob from the video source
-        const response = await fetch(videoFile.src);
-        const blob = await response.blob();
+        try {
+          const response = await fetch(videoFile.src);
+          const blob = await response.blob();
   
-        
-        const formatDate = (date) => {
-          const day = String(date.getDate()).padStart(2, '0');  
-          const month = String(date.getMonth() + 1).padStart(2, '0'); 
-          const year = date.getFullYear();
-          return `${day}-${month}-${year}`;
-        };
-        
-        const currentDate = new Date();
-        const formattedDate = formatDate(currentDate);
-        
-        const fileName = `${firstName.replace(/\s+/g, "_")}_video_${formattedDate}_${index}.mp4`;
-        
-        const key = `videos/${firstName.replace(/\s+/g, "_")}/${fileName}`;
+          const formattedDate = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
+          const fileName = `${email.replace(/\s+/g, "_")}_video_${formattedDate}_${index + 1}.mp4`;
+          const key = `videos/${email.replace(/\s+/g, "_")}/${fileName}`;
   
-        const uploadParams = {
-          Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
-          Key: key,
-          Body: blob,
-          ContentType: "video/mp4",
-        };
+          const uploadParams = {
+            Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
+            Key: key,
+            Body: blob,
+            ContentType: "video/mp4",
+          };
   
-        // Upload to S3
-        const command = new PutObjectCommand(uploadParams);
-        await s3Client.send(command);
+          // Upload to S3
+          const command = new PutObjectCommand(uploadParams);
+          await s3Client.send(command);
   
-        // Construct public URL
-        return `https://${uploadParams.Bucket}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${key}`;
+          console.log(`Uploaded video ${index + 1}:`, key);
+  
+          // Return public video URL
+          return `https://${uploadParams.Bucket}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${key}`;
+        } catch (uploadError) {
+          console.error(`Error uploading video ${index + 1}:`, uploadError);
+          throw uploadError;
+        }
       });
   
-      // Wait for all uploads to complete
+      // Await all uploads
       const videoUrls = await Promise.all(uploadPromises);
   
-      // Save video URLs to user's profile
-      await axios.post("/api/upload-video", {
+      // Save video URLs to backend
+      await axios.post("http://localhost:3001/api/upload-video", {
         email: userEmail,
         videos: videoUrls.map((url) => ({
           url,
@@ -232,29 +224,38 @@ const VideoEditor = () => {
       });
   
       setUploadSuccess(true);
-      toast.success("Videos uploaded successfully!");
-      navigate("/dashboard"); // Adjust the route as needed
+      setLoading(false);
+      setBlurred(false);      
+      toast.success("Video uploaded successfully!");
+      
+      setTimeout(() => {
+        navigate("/dashboard/visualization");
+      }, 2000);
     } catch (err) {
-      console.error("Video upload error:", err);
+      console.error("Video upload failed:", err);
       toast.error("Failed to upload videos. Please try again.");
       setError(err.message);
     } finally {
-      setLoading(false);
       setUploading(false);
+      setLoading(false);
+        setBlurred(false);
     }
   };
+  
+  
+  
 
   useEffect(() => {
-    if (userEmail) {
-      axios
-        .get(`http://localhost:3001/api/username?email=${userEmail}`)
-        .then((response) => {
-          setUserName(response.data.firstName); // Use "firstName" from backend response
-        })
-        .catch((error) => {
-          console.error("Error fetching username:", error);
-        });
-    }
+    // if (userEmail) {
+    //   axios
+    //     .get(`http://localhost:3001/api/username?email=${userEmail}`)
+    //     .then((response) => {
+    //       setUserName(response.data.email); // Use "email" from backend response
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error fetching username:", error);
+    //     });
+    // }
 
 
     const drawTimeline = () => {

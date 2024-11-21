@@ -96,33 +96,41 @@ router.post('/forgot-password', async (req, res) => {
 
 // Endpoint to upload video
 // Endpoint to upload video
-router.post('/api/upload-video', async (req, res) => {
+app.post('/api/upload-video', async (req, res) => {
+  const { email, videos } = req.body;
+
+  if (!email || !videos || !Array.isArray(videos) || videos.length === 0) {
+    return res.status(400).json({ error: 'Invalid request: Missing email or videos' });
+  }
+
   try {
-    const { email, videos } = req.body;
-
-    if (!email || !videos || videos.length === 0) {
-      return res.status(400).json({ error: 'Invalid request' });
-    }
-
     const user = await UserModel.findOne({ email });
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Add new videos to user's videos array
-    user.videos.push(...videos.map(video => ({
-      url: video.url,
-      uploadedAt: video.uploadedAt
-    })));
+    // Add new videos to user's collection
+    videos.forEach((video) => {
+      if (!video.url) {
+        throw new Error('Invalid video URL');
+      }
+      user.videos.push({
+        url: video.url,
+        uploadedAt: new Date(video.uploadedAt || Date.now()),
+      });
+    });
 
     await user.save();
 
+    console.log(`Videos uploaded successfully for user: ${email}`);
     res.status(200).json({ message: 'Videos uploaded successfully', user });
   } catch (error) {
     console.error('Error uploading videos:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 function generateResetToken() {
