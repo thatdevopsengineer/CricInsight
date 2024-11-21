@@ -9,7 +9,14 @@ const ShotSchema = new mongoose.Schema({
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: false },A
+  password: { type: String, required: false },
+  videos: [
+    {
+      url: { type: String, required: true },
+      uploadedAt: { type: Date, required: true },
+      videoNumber: { type: Number, required: true },  // Added video number
+    }
+  ],
   shotsPlayed: [
     {
       date: { type: Date, required: true }, 

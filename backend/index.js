@@ -93,6 +93,38 @@ router.post('/forgot-password', async (req, res) => {
   }
 });
 
+
+// Endpoint to upload video
+// Endpoint to upload video
+router.post('/api/upload-video', async (req, res) => {
+  try {
+    const { email, videos } = req.body;
+
+    if (!email || !videos || videos.length === 0) {
+      return res.status(400).json({ error: 'Invalid request' });
+    }
+
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Add new videos to user's videos array
+    user.videos.push(...videos.map(video => ({
+      url: video.url,
+      uploadedAt: video.uploadedAt
+    })));
+
+    await user.save();
+
+    res.status(200).json({ message: 'Videos uploaded successfully', user });
+  } catch (error) {
+    console.error('Error uploading videos:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 function generateResetToken() {
   // Implement your token generation logic here (e.g., using crypto or JWT)
   return 'some_generated_token';
@@ -179,7 +211,7 @@ app.post('/api/shots', async (req, res) => {
     const { date, email, shots } = req.body;
 
     if (!date || !email) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: 'Missing requirfolder anded fields' });
     }
 
     const user = await UserModel.findOne({ email });
@@ -254,6 +286,8 @@ app.get('/api/username', async (req, res) => {
 });
 
 
+
+
 // axios.post('/api/add-video', videoData)
 //   .then(response => {
 //     console.log("Video added successfully");
@@ -265,6 +299,7 @@ app.get('/api/username', async (req, res) => {
 
 // const videoRoutes = require('./videoRoutes');
 // app.use('/api/video', videoRoutes);
+
 
 
 // Server

@@ -17,7 +17,20 @@ import loaderAnimation from './Loader.json';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+// import { fromEnv } from '@aws-sdk/credential-providers';
+
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+const s3Client = new S3Client({
+  region: import.meta.env.VITE_AWS_REGION || 'us-west-2', // fallback to default region
+  credentials: {
+    accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+    secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+  },
+});
+
 
 const VideoEditor = () => {
   const [videos, setVideos] = useState([]);
@@ -32,6 +45,13 @@ const VideoEditor = () => {
   const canvasRef = useRef(null);
   const timelineRef = useRef(null);
   const fileInputRef = useRef(null);
+  const [video, setVideo] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [error, setError] = useState(null);
+  const [userName, setUserName] = useState("");
+
+
 
   const userEmail = localStorage.getItem('userEmail');
 
@@ -55,12 +75,12 @@ const VideoEditor = () => {
       toast.error('Please upload an MP4 video file.');
     }
   };
-  
-  
+
+
   const onDrop = (acceptedFiles) => {
     handleVideoUpload(acceptedFiles[0]);
   };
-  
+
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: "video/*",
@@ -151,18 +171,92 @@ const VideoEditor = () => {
   // const [loading, setLoading] = useState(false);
   const navigate = useNavigate(); // Initialize navigate
 
-  const handleDone = () => {
-    console.log('Done clicked');
-    // setLoading(true);  // Start showing the loader
+  const handleDoneClick = async () => {
+  
+    try {
+      setLoading(true);
+      setUploading(true);
+      console.log(import.meta.env.VITE_AWS_REGION); 
 
-    // // Set a timeout for 8 minutes and 42 seconds (522000 ms)
-    // setTimeout(() => {
-    //   setLoading(false);  // Stop showing the loader
-    //   // navigate('/dashboard/visualization'); 
-    // }, 5000);
+  
+      // Fetch user details from backend
+      const userResponse = await axios.get(`/api/username?email=${userEmail}`);
+      const { firstName } = userResponse.data;
+  
+      // Upload each video to S3
+      const uploadPromises = videos.map(async (videoFile, index) => {
+        // Fetch the blob from the video source
+        const response = await fetch(videoFile.src);
+        const blob = await response.blob();
+  
+        
+        const formatDate = (date) => {
+          const day = String(date.getDate()).padStart(2, '0');  
+          const month = String(date.getMonth() + 1).padStart(2, '0'); 
+          const year = date.getFullYear();
+          return `${day}-${month}-${year}`;
+        };
+        
+        const currentDate = new Date();
+        const formattedDate = formatDate(currentDate);
+        
+        const fileName = `${firstName.replace(/\s+/g, "_")}_video_${formattedDate}_${index}.mp4`;
+        
+        const key = `videos/${firstName.replace(/\s+/g, "_")}/${fileName}`;
+  
+        const uploadParams = {
+          Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
+          Key: key,
+          Body: blob,
+          ContentType: "video/mp4",
+        };
+  
+        // Upload to S3
+        const command = new PutObjectCommand(uploadParams);
+        await s3Client.send(command);
+  
+        // Construct public URL
+        return `https://${uploadParams.Bucket}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${key}`;
+      });
+  
+      // Wait for all uploads to complete
+      const videoUrls = await Promise.all(uploadPromises);
+  
+      // Save video URLs to user's profile
+      await axios.post("/api/upload-video", {
+        email: userEmail,
+        videos: videoUrls.map((url) => ({
+          url,
+          uploadedAt: new Date(),
+        })),
+      });
+  
+      setUploadSuccess(true);
+      toast.success("Videos uploaded successfully!");
+      navigate("/dashboard"); // Adjust the route as needed
+    } catch (err) {
+      console.error("Video upload error:", err);
+      toast.error("Failed to upload videos. Please try again.");
+      setError(err.message);
+    } finally {
+      setLoading(false);
+      setUploading(false);
+    }
   };
 
   useEffect(() => {
+    if (userEmail) {
+      axios
+        .get(`http://localhost:3001/api/username?email=${userEmail}`)
+        .then((response) => {
+          setUserName(response.data.firstName); // Use "firstName" from backend response
+        })
+        .catch((error) => {
+          console.error("Error fetching username:", error);
+        });
+    }
+
+
     const drawTimeline = () => {
       if (canvasRef.current && videos.length > 0) {
         const canvas = canvasRef.current;
@@ -170,7 +264,7 @@ const VideoEditor = () => {
         const totalDuration = videos.reduce((sum, video) => sum + video.duration, 0);
         const frameCount = Math.floor(totalDuration / 0.5);
         const interval = 0.5;
-        const spacing = 1; // 1px spacing between videos
+        const spacing = 1;
 
         canvas.width = Math.max(canvas.clientWidth, frameCount * 5 + (videos.length - 1) * spacing);  // Ensure the canvas is wide enough
         canvas.height = canvas.clientHeight;
@@ -215,6 +309,8 @@ const VideoEditor = () => {
         setLoading(false);
         setBlurred(false);
       }
+
+
     };
 
     if (videos.length > 0) {
@@ -229,14 +325,14 @@ const VideoEditor = () => {
         drawTimeline();
       };
     }
-  }, [videos, currentVideoIndex, selectedVideoIndex]);
+  }, [videos, userEmail, currentVideoIndex, selectedVideoIndex]);
 
   const handleTimelineClick = (event) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const spacing = 1;
-    
+
     let accumulatedWidth = 0;
     for (let i = 0; i < videos.length; i++) {
       const videoWidth = (videos[i].duration / videos.reduce((sum, video) => sum + video.duration, 0)) * canvas.width;
@@ -277,7 +373,7 @@ const VideoEditor = () => {
           <CustomButton
             title={videos.length > 0 ? "Done" : "Upload"}
             IconComponent={FileUploadOutlinedIcon}
-            onClick={videos.length > 0 ? handleDone : handleAdd}
+            onClick={videos.length > 0 ? handleDoneClick : handleAdd}
           />
         </Box>
 
@@ -316,7 +412,7 @@ const VideoEditor = () => {
             <IconButton onClick={handleDelete}><DeleteIcon /></IconButton>
           </Box>
         </Box>
-        
+
         <Box
           ref={timelineRef}
           display="flex"
@@ -363,7 +459,7 @@ const VideoEditor = () => {
               animationData: loaderAnimation,
               loop: true,
               autoplay: true,
-              speed: 10 
+              speed: 10
             }}
             height={100}
             width={100}
@@ -386,5 +482,3 @@ const VideoEditor = () => {
 };
 
 export default VideoEditor;
-
-
