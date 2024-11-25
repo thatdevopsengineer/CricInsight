@@ -17,6 +17,20 @@ export default function WhyCricInsight() {
     config: { duration: 600 },
   });
 
+  const scrollToSection = (sectionId) => {
+    const sectionElement = document.getElementById(sectionId);
+    if (sectionElement) {
+      const headerOffset = 80; 
+      const elementPosition = sectionElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <animated.div style={animationProps}>
       <Box
@@ -59,6 +73,7 @@ export default function WhyCricInsight() {
                 </Link>
                 <Button
                   variant="contained"
+                  onClick={() => scrollToSection("contact")} 
                   sx={{
                     color: '#fff',
                     background: '#000',

@@ -85,234 +85,267 @@ const Login = () => {
 
 
   return (
-    <Grid container sx={{
-      backgroundColor:'purple',
-      height: "109vh",
-      overflow: 'hidden'
-    }}>
-      <ToastContainer sx />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={6}
+    <Grid
+    container
+    sx={{
+      backgroundColor: "purple",
+      minHeight: "110vh",
+      overflow: "hidden",
+    }}
+  >
+    <ToastContainer />
+    {/* Left Section */}
+    <Grid
+      item
+      xs={12}
+      md={6}
+      sx={{
+        background: "linear-gradient(90deg, #030947, #12152E, #1F1F1F)",
+        backgroundSize: "cover",
+        paddingTop: 8,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: {sm: "50vh", md: "110v"}, 
+      }}
+    >
+      <img
+        src="./assets/logo.png"
+        alt="Logo"
+        style={{
+          width: "100%", 
+          maxWidth: "400px",
+        }}
+      />
+    </Grid>
+  
+    {/* Right Section */}
+    <Grid
+  item
+  xs={12}
+  md={6}
+  component={Paper}
+  elevation={6}
+  square
+  sx={{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    p: { xs: 3, sm: 6, md: 12 },
+    minHeight: {sm: "60vh", md: "110v"}, 
+  }}
+>
+  <Box
+    sx={{
+      width: "100%",
+      maxWidth: "400px", 
+      mx: "auto",
+      // bgcolor: 'red',
+      maxWidth: {sm: '90%', md: '90%'},
+      
+
+    }}
+  >
+    {/* Title */}
+    <Typography
+      component="h1"
+      sx={{
+        fontWeight: "bold",
+        fontSize: "32px", // Responsive font size
+        position: "relative",
+        mb: 3,
+        textAlign: "center", // Center heading
+      }}
+      variant="h5"
+    >
+      Login
+      <Box
+        component="span"
+        sx={{
+          position: "absolute",
+          left: "50%",
+          bottom: -5,
+          transform: "translateX(-50%)", // Center underline
+          height: 4,
+          width: "30%", // Matches heading width
+          maxWidth: "160px", // Prevents excessive width
+          background:
+            "linear-gradient(120deg, #D52728, #33C0FF, #5733FF, #030947)",
+          borderRadius: "5px",
+        }}
+      />
+    </Typography>
+
+    {/* Login Form */}
+    <Box component="form" noValidate onSubmit={handleSubmit}>
+      <TextField
+        required
+        fullWidth
+        id="email"
+        label="Email Address"
+        name="email"
+        autoFocus
+        autoComplete="email"
+        onChange={(event) => setEmail(event.target.value)}
+        sx={{ mb: 2 }}
+      />
+      <TextField
+        required
+        fullWidth
+        name="password"
+        label="Password"
+        type={showPassword ? "text" : "password"}
+        id="password"
+        onChange={(event) => setPassword(event.target.value)}
+        autoComplete="new-password"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={() => setShowPassword(!showPassword)}
+                onMouseDown={(event) => event.preventDefault()}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        sx={{ mb: 2 }}
+      />
+
+      <Grid container justifyContent="flex-end">
+        <Link
+          href="/forgot-password"
+          variant="body2"
           sx={{
-            background: "linear-gradient(90deg, #030947, #12152E,  #1F1F1F)",
-            backgroundSize: "cover",
-            paddingTop: 8,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: '109vh'
+            textTransform: "none",
+            color: "#000",
+            textDecoration: "none",
+            fontWeight: 500,
           }}
         >
-          <img src="./assets/logo.png" alt="Logo" />
-        </Grid>
+          Forget Password?
+        </Link>
+      </Grid>
 
-        <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
-          <Box
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        endIcon={
+          loading ? (
+            <CircularProgressWithLabel size={18} sx={{ color: "#fff" }} />
+          ) : (
+            <KeyboardDoubleArrowRightIcon />
+          )
+        }
+        disabled={loading}
+        sx={{
+          mt: 2,
+          mb: 2,
+          background: "#030947",
+          borderRadius: 5,
+          textTransform: "none",
+          fontWeight: "bold",
+          "&:hover": {
+            backgroundColor: "#030947",
+            color: "#fff",
+          },
+        }}
+      >
+        {loading ? "Logging in" : "Login"}
+      </Button>
+
+      {/* Divider */}
+      <Divider sx={{ my: 1 }}>
+        <Typography variant="body2" color="textSecondary">
+          or
+        </Typography>
+      </Divider>
+
+      <Box
+  sx={{
+    display: "flex",
+    flexDirection: "column", 
+    gap: 2,
+    justifyContent: "center",
+    alignItems: "center",
+  }}
+>
+  <Box
+    sx={{
+      flex: 1,
+      alignItems: "center",
+      minWidth: '260px',
+
+    }}
+  >
+    <GoogleLogin
+      onSuccess={onSuccess}
+      onError={onFailure}
+      sx={{
+        height: "48px", 
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    />
+  </Box>
+
+  <Button
+    variant="outlined"
+    startIcon={
+      <img
+        src={FacebookIcon}
+        alt="Facebook logo"
+        style={{ width: "20px", height: "20px" }}
+      />
+    }
+    onClick={handleFacebookLogin}
+    sx={{
+      flex: 1,
+      height: "48px", 
+      minWidth: '260px',
+      textTransform: "none",
+      color: "rgba(0, 0, 0)",
+      backgroundColor: "#fff",
+      borderColor: "rgba(0, 0, 0, 0.23)",
+      "&:hover": {
+        backgroundColor: "#f5f5f5",
+        borderColor: "rgba(0, 0, 0, 0.23)",
+      },
+    }}
+  >
+    Continue with Facebook
+  </Button>
+</Box>
+
+
+
+      <Grid container justifyContent="center" sx={{ mt: 2 }}>
+        <Grid item>
+          <Link
+            href="/register"
+            variant="body2"
             sx={{
-              // my: 8,
-              paddingTop: 8,
-              mx: 12,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent:'center',
-              minHeight: '109vh'
-
+              textTransform: "none",
+              color: "#000",
+              textDecoration: "none",
             }}
           >
-            <Typography
-              component="h1"
-              sx={{
-                fontWeight: "bold",
-                fontSize: 64,
-                position: "relative",
-                // paddingLeft: '15%',
-                alignSelf: "flex-start",
-                // background: 'red'
-              }}
-              variant="h5"
-            >
-              Login
-              <Box
-                component="span"
-                sx={{
-                  position: "absolute",
-                  left: 0,
-                  bottom: -5,
-                  height: 6,
-                  width: "95%",
-                  background:
-                    "linear-gradient(120deg, #D52728, #33C0FF, #5733FF, #030947)",
-                  borderRadius: "5px",
-                  marginLeft: "3%",
-                }}
-              />
-            </Typography>
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 5 }}
-            >
-              <TextField
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoFocus
-                autoComplete="email"
-                onChange={(event) => setEmail(event.target.value)}
-                sx={{ my: 2 }}
-              />
-              <TextField
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                id="password"
-                onChange={(event) => setPassword(event.target.value)}
-                autoComplete="new-password"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        onMouseDown={(event) => event.preventDefault()}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-              <Grid container justifyContent={"flex-end"} sx={{ mt: 2 }}>
-              <Link
-                href="/forgot-password"
-                variant="body2"
-                sx={{
-                  textTransform: "none",
-                  color: "#000",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                }}
-              >
-                Forget Password?
-              </Link>
-
-              </Grid>
-
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                endIcon={
-                  loading ? (
-                    <CircularProgressWithLabel
-                      size={18}
-                      sx={{ color: "#fff" }}
-                    />
-                  ) : (
-                    <KeyboardDoubleArrowRightIcon />
-                  )
-                }
-                disabled={loading}
-                sx={{
-                  mt: 2,
-                  mb: 2,
-                  background: "#030947",
-                  borderRadius: 5,
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "#030947",
-                    color: "#fff",
-                  },
-                  "&:active": {
-                    backgroundColor: "#030947",
-                    color: "#fff",
-                  },
-                  "&:disabled": {
-                    backgroundColor: "#030947",
-                    color: "#fff",
-                  },
-                }}
-              >
-                {loading ? "Logging in" : "Login"}
-              </Button>
-
-              <Divider sx={{ px: "2%" }}>
-                <Typography variant="body2" color="textSecondary">
-                  or
-                </Typography>
-              </Divider>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 2,
-                  mt: 2,
-                }}
-              >
-                <GoogleLogin
-                  onSuccess={onSuccess}
-                  onError={onFailure}
-                />
-                <Button
-                  variant="outlined"
-                  startIcon={
-                    <img
-                      src={FacebookIcon}
-                      alt="Facebook logo"
-                      style={{ width: "20px", height: "20px" }}
-                    />
-                  }
-                  onClick={handleFacebookLogin}
-                  sx={{
-                    textTransform: "none",
-                    color: "rgba(0, 0, 0)",
-                    backgroundColor: "#fff",
-                    borderColor: "rgba(0, 0, 0, 0.23)",
-                    "&:hover": {
-                      backgroundColor: "#f5f5f5",
-                      borderColor: "rgba(0, 0, 0, 0.23)",
-                    },
-                  }}
-                >
-                  Continue with Facebook
-                </Button>
-              </Box>
-              <Grid container justifyContent="center" sx={{ mt: 2 }}>
-                <Grid item>
-                  <Link
-                    href="/register"
-                    variant="body2"
-                    sx={{
-                      textTransform: "none",
-                      color: "#000000",
-                      textDecoration: "none",
-                      ml: 4,
-                    }}
-                  >
-                    Don't have an account?{" "}
-                    <span style={{ color: "#D52728", fontWeight: "bold" }}>
-                      Sign Up
-                    </span>
-                  </Link>
-                </Grid>
-              </Grid>
-            </Box>
-          </Box>
+            Don't have an account?{" "}
+            <span style={{ color: "#D52728", fontWeight: "bold" }}>Sign Up</span>
+          </Link>
         </Grid>
-      
-    </Grid>
+      </Grid>
+    </Box>
+  </Box>
+</Grid>
+
+  </Grid>
+  
   );
 };
 

@@ -35,7 +35,7 @@ function AppAppBar({ mode, toggleColorMode }) {
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
-  // Add this function to handle logo click
+
   const handleLogoClick = () => {
     window.scrollTo({
       top: 0,
@@ -48,9 +48,9 @@ function AppAppBar({ mode, toggleColorMode }) {
     height: "60px",
     cursor: "pointer",
     mx: 10,
-    transition: "transform 0.2s", // Optional: adds hover effect
+    transition: "transform 0.2s", 
     "&:hover": {
-      transform: "scale(1.05)" // Optional: adds hover effect
+      transform: "scale(1.05)" 
     }
   };
 
@@ -119,14 +119,13 @@ function AppAppBar({ mode, toggleColorMode }) {
                 src="/logo.png"
                 style={{
                   ...logoStyle,
-                  marginRight: "16px", // Add spacing between the logo and nav links
+                  marginRight: "16px", 
                   transition: "transform 0.2s ease-in-out",
                 }}
                 alt="Logo"
               />
             </Box>
 
-            {/* Navigation links in the center */}
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -157,7 +156,6 @@ function AppAppBar({ mode, toggleColorMode }) {
               ))}
             </Box>
 
-            {/* Right-side Login Button */}
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -180,6 +178,60 @@ function AppAppBar({ mode, toggleColorMode }) {
                   Login
                 </Typography>
               </MenuItem>
+            </Box>
+            <Box sx={{ display: { sm: "", md: "none" } }}>
+              <Button
+                variant="text"
+                color="primary"
+                aria-label="menu"
+                onClick={toggleDrawer(true)}
+                sx={{ minWidth: "30px", p: "4px" }}
+              >
+                <MenuIcon />
+              </Button>
+              <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+                <Box
+                  sx={{
+                    minWidth: "60dvw",
+                    p: 2,
+                    backgroundColor: "background.paper",
+                    flexGrow: 1,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "end",
+                      flexGrow: 1,
+                      backgroundColor: "black",
+                    }}
+                  ></Box>
+                  {navMenus.map((menu) => (
+                    <MenuItem
+                      key={menu.sectionId}
+                      onClick={() => scrollToSection(menu.sectionId)}
+                    >
+                      {menu.label}
+                    </MenuItem>
+                  ))}
+                  <Divider />
+                  <MenuItem onClick={() => navigate('/login')}>
+                    <Typography
+                      sx={{
+                        width: "100%",
+                        background: "#030947",
+                        alignSelf: "center",
+                        color: "white",
+                        px: 2,
+                        py: 1,
+                      }}
+                    >
+                      Login
+                    </Typography>
+                  </MenuItem>
+                </Box>
+              </Drawer>
             </Box>
           </Toolbar>
 

@@ -5,7 +5,6 @@ import Link from "@mui/material/Link";
 import { useSpring, animated } from "@react-spring/web";
 
 function HomeSection({ imageSrc }) {
-  // Animation for text and buttons
   const textAnimation = useSpring({
     opacity: 1,
     transform: "translateY(0px)",
@@ -29,6 +28,20 @@ function HomeSection({ imageSrc }) {
     delay: 600,
   });
 
+  const scrollToSection = (sectionId) => {
+    const sectionElement = document.getElementById(sectionId);
+    if (sectionElement) {
+      const headerOffset = 80; 
+      const elementPosition = sectionElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -39,7 +52,6 @@ function HomeSection({ imageSrc }) {
         padding: 2,
         backgroundColor: "#000000",
         paddingTop: "10%",
-        // height: "110vh",
         fontFamily: "Poppins, sans-serif",
       }}
     >
@@ -108,6 +120,7 @@ function HomeSection({ imageSrc }) {
             </Link>
             <Button
               variant="outlined"
+              onClick={() => scrollToSection("contact")} 
               sx={{
                 backgroundColor: "#000",
                 color: "#fff",
