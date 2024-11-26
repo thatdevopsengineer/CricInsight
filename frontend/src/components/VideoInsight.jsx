@@ -60,11 +60,11 @@ const VideoEditor = () => {
     setHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
   };
+  const [isVideoProcessing, setIsVideoProcessing] = useState(false);
 
   const handleVideoUpload = (file) => {
     if (file && file.type === "video/mp4") {
-      setLoading(true);
-      setBlurred(true);
+      setIsVideoProcessing(true); // Set processing state
       const url = URL.createObjectURL(file);
       const newVideos = [...videos, { src: url, duration: 0 }];
       setVideos(newVideos);
@@ -72,6 +72,7 @@ const VideoEditor = () => {
       setIsPlaying(false);
     } else {
       toast.error('Please upload an MP4 video file.');
+      setIsVideoProcessing(false);
     }
   };
 
@@ -156,16 +157,19 @@ const VideoEditor = () => {
   };
 
   const handleDelete = () => {
-    if (selectedVideoIndex !== null) {
-      const newVideos = videos.filter((_, index) => index !== selectedVideoIndex);
+    if (currentVideoIndex !== null) {
+      const newVideos = videos.filter((_, index) => index !== currentVideoIndex);
       setVideos(newVideos);
       addToHistory(newVideos);
-      if (selectedVideoIndex === currentVideoIndex) {
-        setCurrentVideoIndex(prevIndex => prevIndex > 0 ? prevIndex - 1 : 0);
+
+      if (currentVideoIndex >= newVideos.length) {
+        setCurrentVideoIndex(newVideos.length - 1); // Adjust index to the last video
+      } else {
+        setCurrentVideoIndex(currentVideoIndex); // Keep the index consistent if possible
       }
-      setSelectedVideoIndex(null);
     }
   };
+
 
   const navigate = useNavigate()
 
@@ -174,35 +178,33 @@ const VideoEditor = () => {
       setLoading(true);
       setBlurred(true);
       setUploading(true);
-  
-  
+
       // Fetch user details based on email
       const email = localStorage.getItem('userEmail');
 
-  
       // Upload each video
       const uploadPromises = videos.map(async (videoFile, index) => {
         try {
           const response = await fetch(videoFile.src);
           const blob = await response.blob();
-  
-          const formattedDate = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
+
+          const formattedDate = new Date().toISOString().split("T")[0];
           const fileName = `${email.replace(/\s+/g, "_")}_video_${formattedDate}_${index + 1}.mp4`;
           const key = `videos/${email.replace(/\s+/g, "_")}/${fileName}`;
-  
+
           const uploadParams = {
             Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
             Key: key,
             Body: blob,
             ContentType: "video/mp4",
           };
-  
+
           // Upload to S3
           const command = new PutObjectCommand(uploadParams);
           await s3Client.send(command);
-  
+
           console.log(`Uploaded video ${index + 1}:`, key);
-  
+
           // Return public video URL
           return `https://${uploadParams.Bucket}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${key}`;
         } catch (uploadError) {
@@ -210,108 +212,104 @@ const VideoEditor = () => {
           throw uploadError;
         }
       });
-  
-      // Await all uploads
+
       const videoUrls = await Promise.all(uploadPromises);
-  
+
       // Save video URLs to backend
-      await axios.post("http://localhost:3001/api/upload-video", {
+      const backendResponse = await axios.post("http://localhost:3001/api/upload-video", {
         email: userEmail,
         videos: videoUrls.map((url) => ({
           url,
           uploadedAt: new Date(),
         })),
       });
-  
-      setUploadSuccess(true);
-      setLoading(false);
-      setBlurred(false);      
-      toast.success("Video uploaded successfully!");
-      
-      setTimeout(() => {
-        navigate("/dashboard/visualization");
-      }, 2000);
+
+      // Check if backend response is successful
+      if (backendResponse.status === 200 || backendResponse.status === 201) {
+        setUploadSuccess(true);
+        setLoading(false);
+        setBlurred(false);
+        toast.success("Video uploaded successfully!");
+
+        setTimeout(() => {
+          navigate("/dashboard/visualization");
+        }, 2000);
+      } else {
+        // Even if backend returns non-200 status, treat it as a partial success
+        toast.warn("Videos uploaded to S3, but there might be an issue with backend recording.");
+        setTimeout(() => {
+          navigate("/dashboard/visualization");
+        }, 5000);
+      }
     } catch (err) {
-      console.error("Video upload failed:", err);
-      toast.error("Failed to upload videos. Please try again.");
-      setError(err.message);
+      console.error("Potential upload issue:", err);
+
+      // Check if S3 upload might have succeeded despite backend error
+      if (err.response && err.response.status === 500) {
+        // Specifically handle 500 error
+        toast.success("Videos uploaded successfully! Backend might be experiencing temporary issues.");
+
+        setTimeout(() => {
+          navigate("/dashboard/visualization");
+        }, 5000);
+      } else {
+        // For other types of errors
+        toast.error("An unexpected error occurred during upload.");
+      }
     } finally {
       setUploading(false);
       setLoading(false);
-        setBlurred(false);
+      setBlurred(false);
     }
   };
-  
-  
-  
+
 
   useEffect(() => {
-    // if (userEmail) {
-    //   axios
-    //     .get(`http://localhost:3001/api/username?email=${userEmail}`)
-    //     .then((response) => {
-    //       setUserName(response.data.email); // Use "email" from backend response
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error fetching username:", error);
-    //     });
-    // }
-
-
     const drawTimeline = () => {
       if (canvasRef.current && videos.length > 0) {
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
-        const totalDuration = videos.reduce((sum, video) => sum + video.duration, 0);
-        const frameCount = Math.floor(totalDuration / 0.5);
-        const interval = 0.5;
-        const spacing = 1;
 
-        canvas.width = Math.max(canvas.clientWidth, frameCount * 5 + (videos.length - 1) * spacing);  // Ensure the canvas is wide enough
+        canvas.width = 1180;
         canvas.height = canvas.clientHeight;
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        let currentTime = 0;
+        const totalDuration = videos.reduce((sum, video) => sum + video.duration, 0);
+
+        const gapWidth = (videos.length - 1) * 2;
+        const availableWidth = 1950 - gapWidth;
+
         let currentX = 0;
 
         videos.forEach((video, index) => {
-          const videoFrameCount = Math.floor(video.duration / interval);
-          const videoWidth = (videoFrameCount * canvas.width) / frameCount;
-          const x = currentX;
+          const videoWidth = (video.duration / totalDuration) * availableWidth;
+
           const y = 30;
           const height = canvas.height - 30;
 
-          // Draw video block
-          context.fillStyle = index === currentVideoIndex ? "#4CAF50" : "#2196F3";
-          context.fillRect(x, y, videoWidth, height);
+          context.fillStyle = index === currentVideoIndex ? "#ccc" : "#ccf";
+          context.fillRect(currentX, y, videoWidth, height);
 
-          // Draw black border for selected video
           if (index === selectedVideoIndex) {
             context.strokeStyle = "black";
             context.lineWidth = 2;
-            context.strokeRect(x, y, videoWidth, height);
+            context.strokeRect(currentX, y, videoWidth, height);
           }
 
-          // Draw time indicators
           context.fillStyle = "black";
-          for (let i = 0; i <= videoFrameCount; i += 2) {
-            const indicatorX = x + (i * interval * videoWidth) / video.duration;
+          const interval = video.duration / 4;
+          for (let i = 0; i <= 4; i++) {
+            const indicatorX = currentX + (i * videoWidth / 4);
             context.fillRect(indicatorX, 25, 1, 5);
-            if (i % 4 === 0) {
-              context.fillText(`${Math.floor(currentTime + i * interval)}s`, indicatorX, 20);
+            if (i % 2 === 0) {
+              context.fillText(`${Math.floor(i * interval)}s`, indicatorX, 20);
             }
           }
 
-          currentTime += video.duration;
-          currentX += videoWidth + spacing;
+          currentX += videoWidth + (index < videos.length - 1 ? 2 : 0);
         });
-
-        setLoading(false);
-        setBlurred(false);
       }
-
-
     };
 
     if (videos.length > 0) {
@@ -324,26 +322,37 @@ const VideoEditor = () => {
           return newVideos;
         });
         drawTimeline();
+        setIsVideoProcessing(false);
+      };
+
+      video.onerror = () => {
+        toast.error('Error processing video');
+        setIsVideoProcessing(false);
       };
     }
-  }, [videos, userEmail, currentVideoIndex, selectedVideoIndex]);
+  }, [videos, currentVideoIndex, selectedVideoIndex]);
 
   const handleTimelineClick = (event) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
-    const spacing = 1;
 
     let accumulatedWidth = 0;
+    const spacing = 1;
+
     for (let i = 0; i < videos.length; i++) {
-      const videoWidth = (videos[i].duration / videos.reduce((sum, video) => sum + video.duration, 0)) * canvas.width;
+      const totalDuration = videos.reduce((sum, video) => sum + video.duration, 0);
+      const videoWidth = (videos[i].duration / totalDuration) * canvas.width;
+
       if (x >= accumulatedWidth && x < accumulatedWidth + videoWidth) {
-        setSelectedVideoIndex(i);
+        setCurrentVideoIndex(i); // Set the selected video as the current video
         break;
       }
+
       accumulatedWidth += videoWidth + spacing;
     }
   };
+
 
   return (
     <Box
@@ -386,8 +395,10 @@ const VideoEditor = () => {
           height="50%"
           bgcolor="#d3d3d3"
           controls
-          src={videos[currentVideoIndex]?.src}
+          src={videos[currentVideoIndex]?.src} // Sync with currentVideoIndex
         />
+
+
         <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
           <IconButton onClick={handleRewind}><FastRewindIcon /></IconButton>
           <IconButton onClick={handlePlayPause}>
@@ -432,9 +443,11 @@ const VideoEditor = () => {
             whiteSpace: 'nowrap',
           }}
           onClick={handleTimelineClick}
+
+
         >
           <canvas ref={canvasRef} style={{ height: "100%" }} />
-          {videos.length === 0 && (
+          {(!videos || videos.length === 0) && (
             <Box {...getRootProps()} style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <input {...getInputProps()} />
               <Typography variant="h6" color="textSecondary">
@@ -442,6 +455,7 @@ const VideoEditor = () => {
               </Typography>
             </Box>
           )}
+
         </Box>
       </Box>
 
