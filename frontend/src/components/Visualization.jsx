@@ -14,8 +14,8 @@ const data = [
   { name: "Pull", value: 173, color: "#46399c" },
   { name: "Cover Drive", value: 1040, color: "#0d0a1c" },
   { name: "Straight Drive", value: 543, color: "#201a47" },
-  { name: "Flick", value: 1407, color: "#5948c6" },
-  // { name: "Sweep", value: 24, color: "#6c58f1" },
+  { name: "Flick", value: 907, color: "#5948c6" },
+  { name: "Sweep", value: 194, color: "#6c58f1" },
 ];
 
 const Visualization = () => {

@@ -13,6 +13,7 @@ app.use(cors());
 
 require('dotenv').config(); 
 const mongoose = require('mongoose');
+const { CleaningServices } = require('@mui/icons-material');
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -39,7 +40,7 @@ app.post('/register', (req, res) => {
     .then(newUser => res.status(201).json(newUser))
     .catch(err => {
       console.error("Error during registration:", err); // Logs the error
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: err });
     });
 });
 

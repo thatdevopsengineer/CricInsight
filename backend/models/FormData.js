@@ -9,7 +9,7 @@ const ShotSchema = new mongoose.Schema({
 const VideoSchema = new mongoose.Schema({
   url: { 
     type: String, 
-    required: true, 
+    // required: true, 
     validate: {
       validator: function(v) {
         return /^(https?:\/\/[^\s]+)$/.test(v); // Valid URL regex
@@ -18,12 +18,11 @@ const VideoSchema = new mongoose.Schema({
     },
   },
   uploadedAt: { type: Date, required: true, default: Date.now },
-  videoNumber: { 
-    type: Number, 
-    required: false, 
-    default: 0, 
-    // Remove unique constraint
-  },
+  // videoNumber: { 
+  //   type: Number, 
+  //   default: 0, 
+  //   // Remove unique constraint
+  // },
 });
 
 

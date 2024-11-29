@@ -36,8 +36,6 @@ const PlayingAreas = () => {
   return (
     <Box
       sx={{
-        fontFamily: "Poppins, sans-serif",
-
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',

@@ -35,21 +35,22 @@ const AIAssistant = () => {
 
   const handleSendMessage = async (messageText = input, messageIndex = null) => {
     if (!messageText.trim()) return;
-
+  
+    setInput(""); // Clear input box immediately after clicking send
     setIsLoading(true);
     setShowSamples(false);
-
+  
     // Add user message immediately
     if (messageIndex === null) {
-      setMessages(prevMessages => [...prevMessages, { role: "user", content: messageText }]);
+      setMessages((prevMessages) => [...prevMessages, { role: "user", content: messageText }]);
     } else {
-      setMessages(prevMessages => {
+      setMessages((prevMessages) => {
         const newMessages = [...prevMessages];
         newMessages[messageIndex] = { ...newMessages[messageIndex], content: messageText };
         return newMessages;
       });
     }
-
+  
     try {
       const apiKey = import.meta.env.VITE_APP_GEMINI_API_KEY;
       const response = await axios.post(
@@ -63,7 +64,7 @@ const AIAssistant = () => {
           },
         }
       );
-
+  
       const candidates = response.data.candidates;
       if (
         candidates &&
@@ -74,8 +75,8 @@ const AIAssistant = () => {
       ) {
         const aiResponseText = candidates[0].content.parts[0].text;
         const aiResponse = { role: "assistant", content: formatResponse(aiResponseText) };
-        
-        setMessages(prevMessages => {
+  
+        setMessages((prevMessages) => {
           if (messageIndex !== null) {
             // Update existing AI response
             const newMessages = [...prevMessages];
@@ -88,22 +89,22 @@ const AIAssistant = () => {
         });
       } else {
         console.error("Unexpected response structure:", response.data);
-        setMessages(prevMessages => [
+        setMessages((prevMessages) => [
           ...prevMessages,
           { role: "assistant", content: "Sorry, I couldn't process your request." },
         ]);
       }
     } catch (error) {
       console.error("Error calling Gemini API:", error);
-      setMessages(prevMessages => [
+      setMessages((prevMessages) => [
         ...prevMessages,
         { role: "assistant", content: "Error: Unable to send message" },
       ]);
     } finally {
       setIsLoading(false);
-      setInput("");
     }
   };
+  
 
   const formatResponse = (text) => {
     text = text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
@@ -194,9 +195,9 @@ const AIAssistant = () => {
       {showSamples && (
         <Grid container spacing={2}>
           {[
-            "Tell me about all the shots I play and which shots I need to practise?",
-            "Walk me through how to play pace bowling?",
             "Tell me about the playing areas I need to work on?",
+            "Walk me through how to play pace bowling?",
+            "Tell me about all the shots I play and which shots I need to practise?",
             "Tell me about my cover drive and its areas of improvements?",
           ].map((text, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
@@ -382,6 +383,8 @@ const AIAssistant = () => {
               "&.Mui-focused fieldset": {
                 border: "1px solid #F0F0F0"
               },
+              bgcolor: "#fffx",
+
             },
           }}
           InputProps={{
