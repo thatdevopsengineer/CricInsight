@@ -120,12 +120,15 @@ const FeedbackForm = () => {
       toast.success(response.data.message || "Feedback submitted successfully!");
 
       setFormData({
-        name: profileData.name,
-        email: profileData.email,
         overallSatisfaction: [],
         improvementSuggestions: {
           serviceImprovement: '',
-          systemAdditions: ''
+          systemAdditions: '',
+          systemFrustrations: '',
+          systemIssues: '',
+          systemUsability: '',
+          platformNeeds: '',
+          professionalCapacity: ''
         }
       });
     } catch (error) {
@@ -135,8 +138,6 @@ const FeedbackForm = () => {
 
   const handleCancel = () => {
     setFormData({
-      name: profileData.name,
-      email: profileData.email,
       overallSatisfaction: [],
       improvementSuggestions: {
         serviceImprovement: '',
@@ -168,7 +169,7 @@ const FeedbackForm = () => {
             label="Name"
             name="Name"
             disabled
-            value={profileData.name}
+            value={formData.name}
             onChange={handleInputChange}
           />
           <TextField
@@ -176,7 +177,7 @@ const FeedbackForm = () => {
             label="Email"
             disabled
             name="Email"
-            value={profileData.email}
+            value={formData.email}
             onChange={handleInputChange}
           />
         </Box>
@@ -198,7 +199,7 @@ const FeedbackForm = () => {
                 <TableCell sx={{ background: "#F0F0F0" }}></TableCell>
                 {ratings.map((rating) => (
                   <TableCell
-                    sx={{ fontWeight: "bold", background: "#F0F0F0" }}
+                    sx={{ fontWeight: "600", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"', background: "#F0F0F0" }}
                     key={rating}
                     align="center"
                   >
@@ -213,7 +214,10 @@ const FeedbackForm = () => {
                   <TableCell
                     component="th"
                     scope="row"
-                    sx={{ fontWeight: "bold", background: "#F0F0F0" }}
+                    sx={{
+                      fontWeight: "600", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                      background: "#F0F0F0"
+                    }}
                   >
                     {category}
                   </TableCell>
@@ -227,6 +231,12 @@ const FeedbackForm = () => {
                           )
                         }
                         onChange={() => handleRadioChange(category, rating)}
+                        sx={{
+                          color: "#030947",
+                          "&.Mui-checked": {
+                            color: "#030947",
+                          },
+                        }}
                       />
                     </TableCell>
                   ))}
@@ -235,6 +245,7 @@ const FeedbackForm = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
 
         <TextField
           fullWidth
@@ -245,8 +256,23 @@ const FeedbackForm = () => {
           value={formData.improvementSuggestions.professionalCapacity}
           onChange={handleInputChange}
           margin="normal"
+          sx={{
+            "& label.Mui-focused": {
+              color: "#030947",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#c4c4c4",
+              },
+              "&:hover fieldset": {
+                borderColor: "#030947",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#030947",
+              },
+            },
+          }}
         />
-
 
         <TextField
           fullWidth
@@ -257,8 +283,23 @@ const FeedbackForm = () => {
           value={formData.improvementSuggestions.serviceImprovement}
           onChange={handleInputChange}
           margin="normal"
+          sx={{
+            "& label.Mui-focused": {
+              color: "#030947",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#c4c4c4",
+              },
+              "&:hover fieldset": {
+                borderColor: "#030947",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#030947",
+              },
+            },
+          }}
         />
-
 
         <TextField
           fullWidth
@@ -269,6 +310,22 @@ const FeedbackForm = () => {
           value={formData.improvementSuggestions.systemAdditions}
           onChange={handleInputChange}
           margin="normal"
+          sx={{
+            "& label.Mui-focused": {
+              color: "#030947",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#c4c4c4",
+              },
+              "&:hover fieldset": {
+                borderColor: "#030947",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#030947",
+              },
+            },
+          }}
         />
 
         <TextField
@@ -280,6 +337,22 @@ const FeedbackForm = () => {
           value={formData.improvementSuggestions.systemIssues}
           onChange={handleInputChange}
           margin="normal"
+          sx={{
+            "& label.Mui-focused": {
+              color: "#030947",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#c4c4c4",
+              },
+              "&:hover fieldset": {
+                borderColor: "#030947",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#030947",
+              },
+            },
+          }}
         />
 
         <TextField
@@ -291,6 +364,22 @@ const FeedbackForm = () => {
           value={formData.improvementSuggestions.platformNeeds}
           onChange={handleInputChange}
           margin="normal"
+          sx={{
+            "& label.Mui-focused": {
+              color: "#030947",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#c4c4c4",
+              },
+              "&:hover fieldset": {
+                borderColor: "#030947",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#030947",
+              },
+            },
+          }}
         />
 
         <TextField
@@ -302,6 +391,22 @@ const FeedbackForm = () => {
           value={formData.improvementSuggestions.systemFrustrations}
           onChange={handleInputChange}
           margin="normal"
+          sx={{
+            "& label.Mui-focused": {
+              color: "#030947",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#c4c4c4",
+              },
+              "&:hover fieldset": {
+                borderColor: "#030947",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#030947",
+              },
+            },
+          }}
         />
 
         <TextField
@@ -313,7 +418,24 @@ const FeedbackForm = () => {
           value={formData.improvementSuggestions.systemUsability}
           onChange={handleInputChange}
           margin="normal"
+          sx={{
+            "& label.Mui-focused": {
+              color: "#030947",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#c4c4c4",
+              },
+              "&:hover fieldset": {
+                borderColor: "#030947",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#030947",
+              },
+            },
+          }}
         />
+
 
         <Button
           variant="outlined"
@@ -341,7 +463,6 @@ const FeedbackForm = () => {
         </Button>
       </form>
 
-      {/* ToastContainer for react-toastify */}
       <ToastContainer
         position="top-right"
         autoClose={5000}
