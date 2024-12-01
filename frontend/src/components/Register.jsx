@@ -163,6 +163,7 @@ const Register = () => {
                 fontSize: "32px",
                 position: "relative",
                 textAlign: "flex-start",
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
               }}
               variant="h5"
             >
@@ -322,6 +323,7 @@ const Register = () => {
                   mb: 2,
                   background: "#030947",
                   borderRadius: 5,
+                  fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
                   fontWeight: "bold",
                   textTransform: 'none',
                   "&:hover": {
@@ -353,7 +355,9 @@ const Register = () => {
                     }}
                   >
                     Already have an account?{" "}
-                    <span style={{ color: "#D52728", fontWeight: 'bold' }}>Login</span>
+                    <span style={{
+                      color: "#030947", fontWeight: 'bold', fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+                    }}>Login</span>
                   </Link>
                 </Grid>
               </Grid>
