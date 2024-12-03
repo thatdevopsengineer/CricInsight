@@ -182,7 +182,23 @@ const Login = () => {
               autoFocus
               autoComplete="email"
               onChange={(event) => setEmail(event.target.value)}
-              sx={{ mb: 2, mt: 4 }}
+              sx={{
+                mb: 2, mt: 4 ,
+                "& label.Mui-focused": {
+                  color: "#030947",
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#c4c4c4",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#030947",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#030947",
+                  },
+                },
+              }}
             />
             <TextField
               required
@@ -206,7 +222,22 @@ const Login = () => {
                   </InputAdornment>
                 ),
               }}
-              sx={{ mb: 2 }}
+              sx={{ mb: 2,
+                "& label.Mui-focused": {
+              color: "#030947",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#c4c4c4",
+              },
+              "&:hover fieldset": {
+                borderColor: "#030947",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#030947",
+              },
+            },
+               }}
             />
 
             <Grid container justifyContent="flex-end">

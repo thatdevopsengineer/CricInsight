@@ -205,6 +205,22 @@ const Register = () => {
                     }
                     error={!!errors.firstName}
                     helperText={errors.firstName}
+                    sx={{
+                      "& label.Mui-focused": {
+                        color: "#030947",
+                      },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#c4c4c4",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#030947",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#030947",
+                        },
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -221,6 +237,22 @@ const Register = () => {
                     }
                     error={!!errors.lastName}
                     helperText={errors.lastName}
+                    sx={{
+                      "& label.Mui-focused": {
+                        color: "#030947",
+                      },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#c4c4c4",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#030947",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#030947",
+                        },
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -237,6 +269,22 @@ const Register = () => {
                     }
                     error={!!errors.email}
                     helperText={errors.email}
+                    sx={{
+                      "& label.Mui-focused": {
+                        color: "#030947",
+                      },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#c4c4c4",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#030947",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#030947",
+                        },
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -254,6 +302,22 @@ const Register = () => {
                     autoComplete="new-password"
                     error={!!errors.password}
                     helperText={errors.password}
+                    sx={{
+                      "& label.Mui-focused": {
+                        color: "#030947",
+                      },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#c4c4c4",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#030947",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#030947",
+                        },
+                      },
+                    }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -282,6 +346,22 @@ const Register = () => {
                     onChange={(event) =>
                       handleFieldChange("confirmPassword", event.target.value)
                     }
+                    sx={{
+                      "& label.Mui-focused": {
+                        color: "#030947",
+                      },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#c4c4c4",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#030947",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#030947",
+                        },
+                      },
+                    }}
                     error={!!errors.confirmPassword}
                     helperText={errors.confirmPassword}
                     InputProps={{

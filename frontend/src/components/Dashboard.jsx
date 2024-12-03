@@ -101,7 +101,7 @@ const Dashboard = () => {
       >
         <Toolbar>
           <Typography variant="h6" sx={{
-            flexGrow: 1, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            flexGrow: 1, fontWeight: '500',fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
           }}>
             Welcome, {userName || "User"}!
           </Typography>

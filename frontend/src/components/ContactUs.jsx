@@ -34,6 +34,7 @@ const itemVariants = {
   }
 };
 
+
 const ContactForm = () => {
   const controls = useAnimation();
   const [ref, inView] = useInView({
@@ -140,6 +141,8 @@ const ContactForm = () => {
                     variant="contained"
                     sx={{ 
                       mt: 3, 
+                      fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                      fontWeight: '600',
                       mb: 2, 
                       borderRadius: 5,
                       bgcolor: '#030D40', 
