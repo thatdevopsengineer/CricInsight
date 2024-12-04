@@ -24,13 +24,14 @@ const Dashboard = () => {
   useEffect(() => {
     if (email) {
       axios
-        .get(`http://localhost:3001/api/username?email=${email}`)
+        .get(`http://localhost:3001/api/user/username?email=${email}`)
         .then((response) => {
           setUserName(response.data.firstName);
         })
         .catch((error) => {
           console.error("Error fetching username:", error);
         });
+
     }
   }, [email]);
 
@@ -101,7 +102,7 @@ const Dashboard = () => {
       >
         <Toolbar>
           <Typography variant="h6" sx={{
-            flexGrow: 1, fontWeight: '500',fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            flexGrow: 1, fontWeight: '500', fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
           }}>
             Welcome, {userName || "User"}!
           </Typography>

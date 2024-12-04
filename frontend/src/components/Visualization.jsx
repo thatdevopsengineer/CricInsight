@@ -71,7 +71,7 @@ const Visualization = () => {
         return;
       }
 
-      const response = await axios.post("http://localhost:3001/api/shots", updatedShotsData);
+      const response = await axios.post("http://localhost:3001/api/user/shots", updatedShotsData);
       console.log("Shots data saved successfully:", response.data);
       toast.success("Data Saved Successfully!", {});
     } catch (error) {

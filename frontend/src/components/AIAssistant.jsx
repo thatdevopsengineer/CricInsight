@@ -19,7 +19,7 @@ const AIAssistant = () => {
   useEffect(() => {
     if (email) {
       axios
-        .get(`http://localhost:3001/api/username?email=${email}`)
+        .get(`http://localhost:3001/api/user/username?email=${email}`)
         .then((response) => {
           setUserName(response.data.firstName);
         })

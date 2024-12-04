@@ -216,7 +216,7 @@ const VideoEditor = () => {
       const videoUrls = await Promise.all(uploadPromises);
 
       // Save video URLs to backend
-      const backendResponse = await axios.post("http://localhost:3001/api/upload-video", {
+      const backendResponse = await axios.post("http://localhost:3001/video/upload-video", {
         email: userEmail,
         videos: videoUrls.map((url) => ({
           url,

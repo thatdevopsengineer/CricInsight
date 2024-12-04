@@ -97,7 +97,7 @@ const Register = () => {
     setLoading(true);
 
     axios
-      .post("http://localhost:3001/register", {
+      .post("http://localhost:3001/api/auth/register", {
         firstName,
         lastName,
         email,

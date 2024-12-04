@@ -43,7 +43,7 @@ const FeedbackForm = () => {
     const userEmail = localStorage.getItem("userEmail");
     if (userEmail) {
       axios
-        .get(`http://localhost:3001/user?email=${userEmail}`)
+        .get(`http://localhost:3001/api/user?email=${userEmail}`)
         .then((response) => {
           const { email, name } = response.data;
           setFormData(prev => ({
@@ -56,6 +56,7 @@ const FeedbackForm = () => {
           console.error("Error fetching user data", error);
           toast.error("Failed to fetch user data");
         });
+
     }
   }, []);
 
@@ -115,7 +116,7 @@ const FeedbackForm = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/submit-feedback', formData);
+      const response = await axios.post('http://localhost:3001/api/feedback/submit-feedback', formData);
 
       toast.success(response.data.message || "Feedback submitted successfully!");
 

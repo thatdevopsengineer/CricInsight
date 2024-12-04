@@ -36,7 +36,7 @@ const ProfileEdit = () => {
     const userEmail = localStorage.getItem("userEmail");
     if (userEmail) {
       axios
-        .get(`http://localhost:3001/user?email=${userEmail}`)
+        .get(`http://localhost:3001/api/user?email=${userEmail}`)
         .then((response) => {
           const { email, name, password } = response.data;
           const [firstName, lastName] = name.split(" ");

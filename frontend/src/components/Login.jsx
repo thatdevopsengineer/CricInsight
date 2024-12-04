@@ -34,14 +34,14 @@ const Login = () => {
     setLoading(true);
 
     axios
-      .post("http://localhost:3001/login", { email, password })
+      .post("http://localhost:3001/api/auth/login", { email, password }) 
       .then((result) => {
         setLoading(false);
-        if (result.data.message === "Login successful") { 
-          toast.success("Login successfully!", {});
+        if (result.data.message === "Login successful") {
+          toast.success("Login successfully!");
           localStorage.setItem("userEmail", email);
           setTimeout(() => {
-            navigate("/dashboard");
+            navigate("/dashboard"); 
           }, 2000);
         } else {
           toast.error(result.data.error || "Incorrect credentials! Please try again.");
@@ -62,17 +62,14 @@ const Login = () => {
   const onSuccess = (response) => {
     const googleToken = response.credential;
 
-    axios.post('http://localhost:3001/google-login', { token: googleToken })
+    axios.post('http://localhost:3001/api/google-login', { token: googleToken }) // Updated endpoint
       .then((res) => {
         const userEmail = res.data.email;
-
         localStorage.setItem('userEmail', userEmail);
-
         toast.success('Google login successful!');
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/dashboard");  // Ensure '/dashboard' is correct route
         }, 2000);
-
       })
       .catch((error) => {
         toast.error('Google login failed. Please try again.');
