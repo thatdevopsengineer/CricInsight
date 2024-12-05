@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUser, updateUser, deleteUser, getUserShots, saveShotsData, getUsername } = require('../controllers/userController');
+const { getUser, updateUser, deleteUser, getUserShots, saveShotsData, getUsername, saveChatMessage, getChatHistory  } = require('../controllers/userController');
 
 // Get user by email
 router.get('/', getUser);
@@ -12,12 +12,16 @@ router.post('/updateUser', updateUser);
 router.delete('/deleteUser', deleteUser);
 
 // Get user shots
-router.get('/shots', getUserShots);
+router.get('/getshots', getUserShots);
 
 // Save shots data
-router.post('/shots', saveShotsData);
+router.post('/saveshots', saveShotsData);
 
 // Get username by email
 router.get('/username', getUsername);
+
+//Save users chat with AI Assistant
+router.post('/saveChatMessage', saveChatMessage);
+router.get('/chatHistory', getChatHistory);
 
 module.exports = router;

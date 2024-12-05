@@ -33,17 +33,18 @@ const Visualization = () => {
     const fetchDates = async () => {
       const email = localStorage.getItem("userEmail");
       if (!email) return;
-
+  
       try {
-        const response = await axios.get(`http://localhost:3001/api/user/shots?email=${email}`);
+        const response = await axios.get(`http://localhost:3001/api/user/getshots?email=${email}`);
         setDates(response.data);
       } catch (error) {
         console.error("Error fetching dates:", error);
       }
     };
-
+  
     fetchDates();
   }, [componentKey]);
+  
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
@@ -71,7 +72,7 @@ const Visualization = () => {
         return;
       }
 
-      const response = await axios.post("http://localhost:3001/api/user/shots", updatedShotsData);
+      const response = await axios.post("http://localhost:3001/api/user/saveshots", updatedShotsData);
       console.log("Shots data saved successfully:", response.data);
       toast.success("Data Saved Successfully!", {});
     } catch (error) {

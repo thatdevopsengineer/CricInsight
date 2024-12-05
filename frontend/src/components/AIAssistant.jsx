@@ -5,6 +5,8 @@ import { Send as SendIcon } from "@mui/icons-material";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import { ModeEdit as EditIcon } from "@mui/icons-material"; 
 
+
+
 const AIAssistant = () => {
   const [userName, setUserName] = useState("");
   const email = localStorage.getItem("userEmail");
@@ -16,106 +18,36 @@ const AIAssistant = () => {
   const [editingMessageIndex, setEditingMessageIndex] = useState(null);
   const [editingText, setEditingText] = useState("");
 
+  // Fetch chat history on component mount
   useEffect(() => {
-    if (email) {
-      axios
-        .get(`http://localhost:3001/api/user/username?email=${email}`)
-        .then((response) => {
-          setUserName(response.data.firstName);
-        })
-        .catch((error) => {
-          console.error("Error fetching username:", error);
-        });
-    }
+    const fetchChatHistory = async () => {
+      if (email) {
+        try {
+          // Fetch username
+          const userResponse = await axios.get(`http://localhost:3001/api/user/username?email=${email}`);
+          setUserName(userResponse.data.firstName);
+
+          // Fetch chat history
+          const historyResponse = await axios.get(`http://localhost:3001/api/user/chatHistory?email=${email}`);
+          setMessages(historyResponse.data);
+          
+          // Hide samples if there's chat history
+          if (historyResponse.data.length > 0) {
+            setShowSamples(false);
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+    fetchChatHistory();
   }, [email]);
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
   };
 
-  const handleSendMessage = async (messageText = input, messageIndex = null) => {
-    if (!messageText.trim()) return;
-  
-    setInput(""); // Clear input box immediately after clicking send
-    setIsLoading(true);
-    setShowSamples(false);
-  
-    // Add user message immediately
-    if (messageIndex === null) {
-      setMessages((prevMessages) => [...prevMessages, { role: "user", content: messageText }]);
-    } else {
-      setMessages((prevMessages) => {
-        const newMessages = [...prevMessages];
-        newMessages[messageIndex] = { ...newMessages[messageIndex], content: messageText };
-        return newMessages;
-      });
-    }
-  
-    try {
-      const apiKey = import.meta.env.VITE_APP_GEMINI_API_KEY;
-      const response = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
-        {
-          contents: [{ parts: [{ text: messageText }] }],
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-  
-      const candidates = response.data.candidates;
-      if (
-        candidates &&
-        candidates[0] &&
-        candidates[0].content &&
-        candidates[0].content.parts &&
-        candidates[0].content.parts[0]
-      ) {
-        const aiResponseText = candidates[0].content.parts[0].text;
-        const aiResponse = { role: "assistant", content: formatResponse(aiResponseText) };
-  
-        setMessages((prevMessages) => {
-          if (messageIndex !== null) {
-            // Update existing AI response
-            const newMessages = [...prevMessages];
-            newMessages[messageIndex + 1] = aiResponse;
-            return newMessages;
-          } else {
-            // Add new AI response
-            return [...prevMessages, aiResponse];
-          }
-        });
-      } else {
-        console.error("Unexpected response structure:", response.data);
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { role: "assistant", content: "Sorry, I couldn't process your request." },
-        ]);
-      }
-    } catch (error) {
-      console.error("Error calling Gemini API:", error);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { role: "assistant", content: "Error: Unable to send message" },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-
-  const formatResponse = (text) => {
-    text = text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-    text = text.replace(/\*/g, "<br />");
-    text = text.replace(/\:/g, "<br/>");
-    text = text.replace(/(#{1,6})\s*(.*?)(?=\n|$)/g, (match, hashes, content) => {
-      const level = hashes.length;
-      return `<h${level}>${content.trim()}</h${level}>`;
-    });
-    return text;
-  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -145,6 +77,121 @@ const AIAssistant = () => {
     handleCancelEdit();
   };
 
+  const formatResponse = (text) => {
+    text = text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+    text = text.replace(/\*/g, "<br />");
+    text = text.replace(/\:/g, "<br/>");
+    text = text.replace(/(#{1,6})\s*(.*?)(?=\n|$)/g, (match, hashes, content) => {
+      const level = hashes.length;
+      return `<h${level}>${content.trim()}</h${level}>`;
+    });
+    return text;
+  };
+
+  const handleSendMessage = async (messageText = input, messageIndex = null) => {
+    if (!messageText.trim()) return;
+  
+    setInput(""); 
+    setIsLoading(true);
+    setShowSamples(false);
+  
+    const userMessage = { role: "user", content: messageText };
+    
+    try {
+      // Save user message to backend
+      await axios.post("http://localhost:3001/api/user/saveChatMessage", {
+        email,
+        message: userMessage
+      });
+
+      // Update local messages state
+      if (messageIndex === null) {
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
+      } else {
+        setMessages((prevMessages) => {
+          const newMessages = [...prevMessages];
+          newMessages[messageIndex] = userMessage;
+          return newMessages;
+        });
+      }
+  
+      // Existing Gemini API call logic
+      const apiKey = import.meta.env.VITE_APP_GEMINI_API_KEY;
+      const response = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
+        {
+          contents: [{ parts: [{ text: messageText }] }],
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      const candidates = response.data.candidates;
+      if (
+        candidates &&
+        candidates[0] &&
+        candidates[0].content &&
+        candidates[0].content.parts &&
+        candidates[0].content.parts[0]
+      ) {
+        const aiResponseText = candidates[0].content.parts[0].text;
+        const aiResponse = { 
+          role: "assistant", 
+          content: formatResponse(aiResponseText) 
+        };
+  
+        // Save AI response to backend
+        await axios.post("http://localhost:3001/api/user/saveChatMessage", {
+          email,
+          message: aiResponse
+        });
+
+        // Update local messages state
+        setMessages((prevMessages) => {
+          if (messageIndex !== null) {
+            const newMessages = [...prevMessages];
+            newMessages[messageIndex + 1] = aiResponse;
+            return newMessages;
+          } else {
+            return [...prevMessages, aiResponse];
+          }
+        });
+      } else {
+        console.error("Unexpected response structure:", response.data);
+        const errorResponse = { 
+          role: "assistant", 
+          content: "Sorry, I couldn't process your request." 
+        };
+        
+        // Save error response to backend
+        await axios.post("http://localhost:3001/api/user/saveChatMessage", {
+          email,
+          message: errorResponse
+        });
+
+        setMessages((prevMessages) => [...prevMessages, errorResponse]);
+      }
+    } catch (error) {
+      console.error("Error calling Gemini API:", error);
+      const errorResponse = { 
+        role: "assistant", 
+        content: "Error: Unable to send message" 
+      };
+
+      // Save error response to backend
+      await axios.post("http://localhost:3001/api/user/saveChatMessage", {
+        email,
+        message: errorResponse
+      });
+
+      setMessages((prevMessages) => [...prevMessages, errorResponse]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <Container maxWidth="md">
       <Box
@@ -383,7 +430,7 @@ const AIAssistant = () => {
               "&.Mui-focused fieldset": {
                 border: "1px solid #F0F0F0"
               },
-              bgcolor: "#fffx",
+              bgcolor: "#fff",
 
             },
           }}

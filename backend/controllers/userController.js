@@ -150,3 +150,52 @@ exports.getUsername = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
+
+exports.saveChatMessage = async (req, res) => {
+    try {
+      const { email, message } = req.body;
+  
+      if (!email || !message) {
+        return res.status(400).json({ error: 'Email and message are required' });
+      }
+  
+      const user = await UserModel.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      user.chatHistory.push(message);
+      await user.save();
+  
+      res.status(201).json({ message: 'Chat message saved successfully' });
+    } catch (error) {
+      console.error('Error saving chat message:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+  
+  // Get chat history
+  exports.getChatHistory = async (req, res) => {
+    try {
+      const { email } = req.query;
+  
+      if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+      }
+  
+      const user = await UserModel.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Sort chat history by timestamp
+      const sortedChatHistory = user.chatHistory.sort((a, b) => a.timestamp - b.timestamp);
+  
+      res.status(200).json(sortedChatHistory);
+    } catch (error) {
+      console.error('Error fetching chat history:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
