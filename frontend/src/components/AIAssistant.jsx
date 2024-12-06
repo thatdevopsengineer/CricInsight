@@ -240,41 +240,44 @@ const AIAssistant = () => {
 
 
       {showSamples && (
-        <Grid container spacing={2}>
-          {[
-            "Tell me about the playing areas I need to work on?",
-            "Walk me through how to play pace bowling?",
-            "Tell me about all the shots I play and which shots I need to practise?",
-            "Tell me about my cover drive and its areas of improvements?",
-          ].map((text, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <Card
-                onClick={() => handleSampleClick(text)}
-                sx={{
-                  backgroundColor: "#F0F0F0",
-                  cursor: "pointer",
-                  borderRadius: 2,
-                }}
+  <Box id="sample-inputs">
+    <Grid container spacing={2}>
+      {[
+        "Tell me about the playing areas I need to work on?",
+        "Walk me through how to play pace bowling?",
+        "Tell me about all the shots I play and which shots I need to practise?",
+        "Tell me about my cover drive and its areas of improvements?",
+      ].map((text, index) => (
+        <Grid item xs={12} sm={6} md={3} key={index}>
+          <Card
+            onClick={() => handleSampleClick(text)}
+            sx={{
+              backgroundColor: "#F0F0F0",
+              cursor: "pointer",
+              borderRadius: 2,
+            }}
+          >
+            <CardContent>
+              <Typography
+                variant="body1"
+                sx={{ textAlign: "left", height: 80 }}
+                component="p"
               >
-                <CardContent>
-                  <Typography
-                    variant="body1"
-                    sx={{ textAlign: "left", height: 80 }}
-                    component="p"
-                  >
-                    {text}
-                  </Typography>
-                  <Box sx={{ textAlign: "right" }}>
-                    <IconButton sx={{ bgcolor: "#fff" }}>
-                      <LanguageOutlinedIcon />
-                    </IconButton>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+                {text}
+              </Typography>
+              <Box sx={{ textAlign: "right" }}>
+                <IconButton sx={{ bgcolor: "#fff" }}>
+                  <LanguageOutlinedIcon />
+                </IconButton>
+              </Box>
+            </CardContent>
+          </Card>
         </Grid>
-      )}
+      ))}
+    </Grid>
+  </Box>
+)}
+
 
       <Box sx={{ mt: 2, mb: 10, overflowY: "auto" }}>
         {messages.map((message, index) => (

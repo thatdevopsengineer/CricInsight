@@ -102,7 +102,7 @@ const ProfileEdit = () => {
     }
   
     axios
-      .post("http://localhost:3001/updateUser", updatedData)
+      .post("http://localhost:3001/api/user/updateUser", updatedData)
       .then((response) => {
         console.log("Profile updated successfully:", response.data);
         toast.success("Profile updated successfully!");
@@ -121,7 +121,7 @@ const ProfileEdit = () => {
   const handleDelete = () => {
     setOpen(false);
     axios
-      .delete(`http://localhost:3001/deleteUser?email=${profileData.email}`)
+      .delete(`http://localhost:3001/api/user/deleteUser?email=${profileData.email}`)
       .then((response) => {
         console.log('Profile deleted successfully:', response.data);
         toast.success('Profile deleted successfully!', {});
