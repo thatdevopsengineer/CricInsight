@@ -36,6 +36,7 @@ const App = () => {
             path="/old-dashboard" 
             element={userEmail ? <Navigate to="/dashboard" /> : <OldDashboard />} 
           />
+          
           <Route path="/dashboard/*" element={<PrivateRoute element={<Dashboard />} />} />
           {/* <Route 
             path="/forgot-password" 

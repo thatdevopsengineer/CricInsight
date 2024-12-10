@@ -7,21 +7,27 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import RefreshIcon from '@mui/icons-material/Refresh';
+import loaderAnimation from './Loader.json';
+import Lottie from "react-lottie";
 
-
-const data = [
-  { name: "Cut", value: 433, color: "#332971" },
-  { name: "Pull", value: 173, color: "#46399c" },
-  { name: "Cover Drive", value: 1040, color: "#0d0a1c" },
-  { name: "Straight Drive", value: 543, color: "#201a47" },
-  { name: "Flick", value: 907, color: "#5948c6" },
-  { name: "Sweep", value: 194, color: "#6c58f1" },
-];
 
 const Visualization = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [dates, setDates] = useState([]);
   const [componentKey, setComponentKey] = useState(0);
+  const [blurred, setBlurred] = useState(false);
+
+  const [data, setData] = useState([
+    { name: "Cut", value: 0, color: "#332971" },
+    { name: "Pull", value: 0, color: "#46399c" },
+    { name: "Cover Drive", value: 0, color: "#0d0a1c" },
+    { name: "Straight Drive", value: 0, color: "#201a47" },
+    { name: "Flick", value: 0, color: "#5948c6" }
+  ]);
+
+  const [loadingMessage, setLoadingMessage] = useState("Uploading video...");
+
+
 
   const [shotsData, setShotsData] = useState({
     date: new Date().toISOString(),
@@ -29,7 +35,42 @@ const Visualization = () => {
     shots: [],
   });
 
+  const [loading, setLoading] = useState(false); // Loader state
+
+  const fetchLastVideoAnalysis = async () => {
+    setLoading(true); // Start loader
+    setBlurred(true);
+
+    try {
+      const response = await axios.get("http://localhost:3001/api/video/last-analysis");
+      if (response.data && response.data.ShotPercentages) {
+        const updatedData = Object.entries(response.data.ShotPercentages).map(([shotName, percentage]) => {
+          const formattedName = shotName
+            .split("_")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+          const existingShot = data.find(d => d.name === formattedName);
+          return {
+            name: formattedName,
+            value: Number(percentage),
+            color: existingShot ? existingShot.color : "#6c58f1"
+          };
+        });
+        setData(updatedData);
+        toast.success("Data loaded successfully!");
+      }
+    } catch (error) {
+      console.error("Error fetching video analysis:", error);
+      toast.error("Failed to fetch video analysis");
+    } finally {
+      setLoading(false); // Stop loader
+      setBlurred(false);
+    }
+  };
+
   useEffect(() => {
+    
+
     const fetchDates = async () => {
       const email = localStorage.getItem("userEmail");
       if (!email) return;
@@ -42,10 +83,10 @@ const Visualization = () => {
       }
     };
   
+    fetchLastVideoAnalysis();
     fetchDates();
   }, [componentKey]);
   
-
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
   };
@@ -64,13 +105,6 @@ const Visualization = () => {
         date: new Date().toISOString(),
         shots: updatedShots,
       };
-
-      console.log("Sending shots data:", updatedShotsData);
-
-      if (!updatedShotsData.date || !updatedShotsData.email) {
-        console.error("Date or email missing");
-        return;
-      }
 
       const response = await axios.post("http://localhost:3001/api/user/saveshots", updatedShotsData);
       console.log("Shots data saved successfully:", response.data);
@@ -115,6 +149,47 @@ const Visualization = () => {
       }}
     >
       <ToastContainer />
+      {loading && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", 
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            <Lottie
+              options={{
+                animationData: loaderAnimation,
+                loop: true,
+                autoplay: true,
+              }}
+              height={100}
+              width={100}
+            />
+            <Typography variant="h6" align="center" >
+              Loading data...
+            </Typography>
+          </Box>
+        </Box>
+      )}
       <Typography
         variant="h5"
         align="center"
@@ -265,6 +340,8 @@ const Visualization = () => {
         </Grid>
       </Grid>
     </Box>
+
+    
   );
 };
 

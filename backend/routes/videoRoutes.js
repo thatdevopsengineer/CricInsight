@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { uploadVideo } = require('../controllers/videoController');
+const { uploadVideo, getLastVideoAnalysis } = require('../controllers/videoController');
 
 // Upload video
 router.post('/upload-video', uploadVideo);
+
+router.get('/last-analysis', getLastVideoAnalysis);
+
 
 module.exports = router;

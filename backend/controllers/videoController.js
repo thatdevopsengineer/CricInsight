@@ -21,3 +21,42 @@ exports.uploadVideo = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+const AWS = require('aws-sdk');
+const awsConfig = require('../awsConfig'); 
+
+
+// Configure AWS (add these lines)
+AWS.config.update({
+  region: 'ap-south-1', // e.g., 'us-east-1'
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
+
+const dynamoDB = new AWS.DynamoDB.DocumentClient();
+
+exports.getLastVideoAnalysis = async (req, res) => {
+  try {
+    // Query to get the most recent video analysis
+    const params = {
+      TableName: 'CricketVideoAnalysis',
+      KeyConditionExpression: 'VideoId = :videoId',
+      ExpressionAttributeValues: {
+        ':videoId': 'practice-video'
+      },
+      ScanIndexForward: false, // Sort by timestamp in descending order
+      Limit: 1 // Get only the most recent entry
+    };
+
+    const result = await dynamoDB.query(params).promise();
+
+    if (result.Items && result.Items.length > 0) {
+      return res.status(200).json(result.Items[0]);
+    } else {
+      return res.status(404).json({ message: 'No video analysis found' });
+    }
+  } catch (error) {
+    console.error('Error fetching video analysis:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

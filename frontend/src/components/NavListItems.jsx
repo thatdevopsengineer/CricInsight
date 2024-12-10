@@ -18,7 +18,7 @@ export const mainListItems = (handleMenuClick) => {
 
   const handleLogout = () => {
     localStorage.removeItem('userEmail');
-    navigate('/login');
+    navigate('/');
     window.location.reload();
   };
 
@@ -115,14 +115,14 @@ export const mainListItems = (handleMenuClick) => {
       </ListItemButton>
 
       <ListItemButton
-        onClick={() => handleMenuClick("PaymentGateway")}
+        onClick={() => handleMenuClick("AdaptiveLearning")}
         sx={{
           mx: 1,
           mb: 0.5,
           px: 2,
           borderRadius: 2,
-          backgroundColor: isSelected('payment') ? "white" : "inherit",
-          color: isSelected('payment') ? "#030947" : "white",
+          backgroundColor: isSelected('adaptive-learning') ? "white" : "inherit",
+          color: isSelected('adaptive-learning') ? "#030947" : "white",
           "&:hover": {
             backgroundColor: "white",
             color: "#030947",
@@ -135,12 +135,13 @@ export const mainListItems = (handleMenuClick) => {
         <ListItemIcon>
           <PsychologyIcon
             sx={{
-              color: isSelected('payment') ? "#030947" : "white",
+              color: isSelected('adaptive-learning') ? "#030947" : "white",
             }}
           />
         </ListItemIcon>
         <ListItemText primary="Adaptive Learning" />
       </ListItemButton>
+      
 
       <ListItemButton
         onClick={() => handleMenuClick("AIAssistant")}

@@ -12,6 +12,7 @@ import Reviews from "./Reviews";
 import { mainListItems } from "./NavListItems";
 import axios from "axios";
 import NotFoundPage from "./PageNotFound";
+import AdaptiveLearning from "./AdaptiveLearning";
 
 const drawerWidth = 240;
 
@@ -51,6 +52,7 @@ const Dashboard = () => {
       Profile: 'profile',
       AIAssistant: 'ai-assistant',
       Reviews: 'reviews',
+      AdaptiveLearning: 'adaptive-learning',
       // VideoInsight: 'video-editor'
     };
 
@@ -132,6 +134,7 @@ const Dashboard = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="ai-assistant" element={<AIAssistant />} />
           <Route path="reviews" element={<Reviews />} />
+          <Route path="adaptive-learning" element={<AdaptiveLearning />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route
             path="video-insights"

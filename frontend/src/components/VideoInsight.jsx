@@ -65,7 +65,7 @@ const VideoEditor = () => {
 
   const handleVideoUpload = (file) => {
     if (file && file.type === "video/mp4") {
-      setIsVideoProcessing(true); // Set processing state
+      setIsVideoProcessing(true);
       const url = URL.createObjectURL(file);
       const newVideos = [...videos, { src: url, duration: 0 }];
       setVideos(newVideos);
@@ -81,7 +81,7 @@ const VideoEditor = () => {
     try {
       const response = await axios.post('http://localhost:3001/execute-model');
       console.log('runn')
-      toast.success('Video Analysis Executed');
+      toast.success('Video Processed successfully ');
     } catch (error) {
       console.error('Error executing model:', error);
       toast.error('Failed to execute model on EC2');
@@ -358,7 +358,7 @@ const VideoEditor = () => {
       const videoWidth = (videos[i].duration / totalDuration) * canvas.width;
 
       if (x >= accumulatedWidth && x < accumulatedWidth + videoWidth) {
-        setCurrentVideoIndex(i); // Set the selected video as the current video
+        setCurrentVideoIndex(i); 
         break;
       }
 
@@ -411,7 +411,7 @@ const VideoEditor = () => {
           height="50%"
           bgcolor="#d3d3d3"
           controls
-          src={videos[currentVideoIndex]?.src} // Sync with currentVideoIndex
+          src={videos[currentVideoIndex]?.src} 
         />
 
 
