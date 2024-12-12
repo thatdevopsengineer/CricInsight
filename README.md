@@ -9,8 +9,8 @@ Cricket players, especially amateurs, lack access to expert coaching and insight
 ## ✨ Features
 
 - **Video Insights:** Upload and edit your practice videos.
-- **Shot Classification:** Detects played shots in practice video and classifies that into predefined types using AI models.
-- **Area Calculation:** Calculates playing areas with wagon wheel.
+- **Shot Classification:** Detects shots from practice videos and classifies that into predefined types using AI models.
+- **Area Calculation:** Calculates playing areas in a wagon wheel.
 - **Data Visualization:** Visual representation of shot statistics and distribution.
 - **Adaptive Learning:** Detects flaws in player's technique and suggests improvements.
 - **Smart Chatbot:** AI-powered assistant for user queries and instant support.
@@ -82,18 +82,19 @@ git clone https://github.com/Daoud-Hussain/CricInsight.git
 
 2. install dependencies by running `npm install` command
 
-3. Run the command `npm start` or `nodemon setver.js` to start live server on database
+3. Run the command `npm start` or `nodemon server.js` to start live server on database
 
 
-- Congratulation 🎉 you have setup the environment successfully
+Congratulation 🎉 you have setup the environment successfully
 
 
 
 ## Contributing
 If you'd like to contribute to this project, please open an issue or submit a pull request. 
+
 Don' forget to star the repo if you liked it.
 
-
+Connect me on <a href="https://daoudhussain.netlify.app/" target="_blank">LinkedIn</a> and <a href="https://medium.com/@dev.daoudhussain" target="_blank">Medium</a>  <br>
 
 ## Contributers
 <a href = "https://daoudhussain.netlify.app/">
