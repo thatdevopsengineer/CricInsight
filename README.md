@@ -49,6 +49,9 @@ Cricket players, especially amateurs, lack access to expert coaching and insight
 ### Playing Areas
 ![Playing-areas](https://github.com/user-attachments/assets/d474afe2-88a2-484d-8b61-71bad65d1606)
 
+### Payment Gateway
+![Payment-Gateway](https://github.com/user-attachments/assets/a18a3a7c-2cc8-4186-8417-e4dfbfbae0e9)
+
 ### AI Assistant
 ![AI Assistant](https://github.com/user-attachments/assets/ad029c66-2b51-4348-bc74-4fd7d5ac0012)
 
