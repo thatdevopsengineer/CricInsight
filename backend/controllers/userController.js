@@ -199,3 +199,32 @@ exports.saveChatMessage = async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   };
+
+  // Get shots by date
+exports.getShotsByDate = async (req, res) => {
+    const { email, date } = req.query;
+
+    if (!email || !date) {
+        return res.status(400).json({ error: 'Email and date are required' });
+    }
+
+    try {
+        const user = await UserModel.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const shotsData = user.shotsPlayed.find(
+            (entry) => new Date(entry.date).toISOString() === new Date(date).toISOString()
+        );
+
+        if (!shotsData) {
+            return res.status(404).json({ error: 'No data found for the selected date' });
+        }
+
+        res.status(200).json(shotsData);
+    } catch (err) {
+        console.error('Error fetching shots by date:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};

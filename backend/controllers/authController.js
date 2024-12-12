@@ -143,7 +143,6 @@ exports.googleLogin = async (req, res) => {
 };
 
 
-
 // Facebook Login Strategy Configuration
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_APP_ID,
@@ -173,3 +172,4 @@ async (accessToken, refreshToken, profile, done) => {
   }
 }
 ));
+

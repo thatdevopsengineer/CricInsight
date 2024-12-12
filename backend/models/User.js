@@ -55,7 +55,17 @@ const UserSchema = new mongoose.Schema(
       type: String,
       unique: true,
       sparse: true 
-    }
+    },
+    // In User model
+subscribedPlan: {
+  type: String,
+  enum: ['Basic', 'Popular', 'Advance'],
+},
+isSubscribed: {
+  type: Boolean,
+  default: false
+},
+subscribedAt: Date
 
   },
   { timestamps: true }

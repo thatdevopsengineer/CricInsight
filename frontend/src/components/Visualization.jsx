@@ -1,95 +1,150 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Grid, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LabelList } from "recharts";
+import {
+  Box,
+  Typography,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  LabelList,
+} from "recharts";
 import axios from "axios";
 import CustomButton from "./CustomButton";
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import RefreshIcon from '@mui/icons-material/Refresh';
-import loaderAnimation from './Loader.json';
+import RefreshIcon from "@mui/icons-material/Refresh";
+import loaderAnimation from "./Loader.json";
 import Lottie from "react-lottie";
-
 
 const Visualization = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [dates, setDates] = useState([]);
   const [componentKey, setComponentKey] = useState(0);
   const [blurred, setBlurred] = useState(false);
-
   const [data, setData] = useState([
     { name: "Cut", value: 0, color: "#332971" },
     { name: "Pull", value: 0, color: "#46399c" },
     { name: "Cover Drive", value: 0, color: "#0d0a1c" },
     { name: "Straight Drive", value: 0, color: "#201a47" },
-    { name: "Flick", value: 0, color: "#5948c6" }
+    { name: "Flick", value: 0, color: "#5948c6" },
   ]);
+  const [loading, setLoading] = useState(false);
 
-  const [loadingMessage, setLoadingMessage] = useState("Uploading video...");
-
-
-
-  const [shotsData, setShotsData] = useState({
-    date: new Date().toISOString(),
-    email: localStorage.getItem("userEmail"),
-    shots: [],
-  });
-
-  const [loading, setLoading] = useState(false); // Loader state
-
+  // Fetch stats from DynamoDB on initial load
   const fetchLastVideoAnalysis = async () => {
-    setLoading(true); // Start loader
+    setLoading(true);
     setBlurred(true);
 
     try {
-      const response = await axios.get("http://localhost:3001/api/video/last-analysis");
+      const response = await axios.get(
+        "http://localhost:3001/api/video/last-analysis"
+      );
       if (response.data && response.data.ShotPercentages) {
-        const updatedData = Object.entries(response.data.ShotPercentages).map(([shotName, percentage]) => {
-          const formattedName = shotName
-            .split("_")
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-          const existingShot = data.find(d => d.name === formattedName);
-          return {
-            name: formattedName,
-            value: Number(percentage),
-            color: existingShot ? existingShot.color : "#6c58f1"
-          };
-        });
+        const updatedData = Object.entries(response.data.ShotPercentages).map(
+          ([shotName, percentage]) => {
+            const formattedName = shotName
+              .split("_")
+              .map(
+                (word) => word.charAt(0).toUpperCase() + word.slice(1)
+              )
+              .join(" ");
+            const existingShot = data.find(
+              (d) => d.name === formattedName
+            );
+            return {
+              name: formattedName,
+              value: Number(percentage),
+              color: existingShot
+                ? existingShot.color
+                : "#6c58f1",
+            };
+          }
+        );
         setData(updatedData);
-        toast.success("Data loaded successfully!");
+        toast.success("Data loaded Successfully!");
       }
     } catch (error) {
       console.error("Error fetching video analysis:", error);
       toast.error("Failed to fetch video analysis");
     } finally {
-      setLoading(false); // Stop loader
+      setLoading(false);
       setBlurred(false);
     }
   };
 
-  useEffect(() => {
-    
+  // Fetch available dates from MongoDB
+  const fetchDates = async () => {
+    const email = localStorage.getItem("userEmail");
+    if (!email) return;
 
-    const fetchDates = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/user/getshots?email=${email}`
+      );
+      setDates(response.data);
+    } catch (error) {
+      console.error("Error fetching dates:", error);
+    }
+  };
+
+  // Fetch stats for a specific date from MongoDB
+  const fetchStatsByDate = async (date) => {
+    setLoading(true);
+    setBlurred(true);
+
+    try {
       const email = localStorage.getItem("userEmail");
-      if (!email) return;
-  
-      try {
-        const response = await axios.get(`http://localhost:3001/api/user/getshots?email=${email}`);
-        setDates(response.data);
-      } catch (error) {
-        console.error("Error fetching dates:", error);
-      }
-    };
-  
+      const response = await axios.get(
+        `http://localhost:3001/api/user/getshotsbydate?email=${email}&date=${date}`
+      );
+      const { shots } = response.data;
+      const updatedData = shots.map((shot) => ({
+        name: shot.name,
+        value: parseFloat(shot.percentage),
+        color: data.find((d) => d.name === shot.name)?.color || "#6c58f1",
+      }));
+      setData(updatedData);
+      // toast.success("Data loaded from MongoDB!");
+    } catch (error) {
+      console.error("Error fetching stats by date:", error);
+      toast.error("Failed to fetch data");
+    } finally {
+      setLoading(false);
+      setBlurred(false);
+    }
+  };
+
+  // Handle dropdown change
+  const handleCategoryChange = async (event) => {
+    const selectedDate = event.target.value;
+    setSelectedCategory(selectedDate);
+    fetchStatsByDate(selectedDate);
+  };
+
+  // Reload data from DynamoDB
+  // const reloadData = () => {
+  //   setSelectedCategory("");
+  //   // fetchLastVideoAnalysis();
+  // };
+
+  useEffect(() => {
     fetchLastVideoAnalysis();
     fetchDates();
-  }, [componentKey]);
-  
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-  };
+  }, []);
 
   const saveShotsData = async () => {
     try {
@@ -101,17 +156,16 @@ const Visualization = () => {
       }));
 
       const updatedShotsData = {
-        ...shotsData,
         date: new Date().toISOString(),
+        email: localStorage.getItem("userEmail"),
         shots: updatedShots,
       };
 
-      const response = await axios.post("http://localhost:3001/api/user/saveshots", updatedShotsData);
-      console.log("Shots data saved successfully:", response.data);
-      toast.success("Data Saved Successfully!", {});
+      await axios.post("http://localhost:3001/api/user/saveshots", updatedShotsData);
+      toast.success("Data Saved Successfully!");
     } catch (error) {
-      toast.error("Error saving shots data.");
       console.error("Error saving shots data:", error);
+      toast.error("Error saving data.");
     }
   };
 
@@ -133,10 +187,13 @@ const Visualization = () => {
     );
   };
 
-  const reloadData = () => {
-    setComponentKey(prevKey => prevKey + 1);
+  const reloadData = async () => {
+    setComponentKey((prevKey) => prevKey + 1); // Trigger re-render
+    await fetchDates(); // Fetch the latest dates from the server
+    setSelectedCategory(""); // Reset the selected category
     console.log("Data reloaded");
   };
+  
 
   return (
     <Box
@@ -154,10 +211,10 @@ const Visualization = () => {
           sx={{
             position: "fixed",
             top: 0,
-            left: 0,
+            left: '8%',
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)", 
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -167,7 +224,7 @@ const Visualization = () => {
           <Box
             sx={{
               backgroundColor: "white",
-              padding: "20px",
+              padding: "30px",
               borderRadius: "8px",
               display: "flex",
               flexDirection: "column",
@@ -193,7 +250,8 @@ const Visualization = () => {
       <Typography
         variant="h5"
         align="center"
-        sx={{ marginBottom: "20px", fontWeight: "bold", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+        sx={{
+          marginBottom: "20px", fontWeight: "bold", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
         }}
       >
         Shots Visualization
@@ -225,12 +283,6 @@ const Visualization = () => {
           <FormControl sx={{ minWidth: 220 }}>
             <InputLabel id="date-label">Date</InputLabel>
             <Select
-              sx={{
-                borderRadius: "10px",
-                height: "50px",
-              }}
-              labelId="date-label"
-              id="date"
               value={selectedCategory}
               onChange={handleCategoryChange}
               label="Date"
@@ -252,6 +304,7 @@ const Visualization = () => {
                 );
               })}
             </Select>
+
           </FormControl>
         </Grid>
 
@@ -341,7 +394,7 @@ const Visualization = () => {
       </Grid>
     </Box>
 
-    
+
   );
 };
 

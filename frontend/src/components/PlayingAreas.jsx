@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import axios from 'axios';
 import Lottie from 'react-lottie';
-import loaderAnimation from './Loader.json';  
+import loaderAnimation from './Loader.json';
 import { toast } from 'react-toastify';
 
 const PlayingAreas = () => {
@@ -77,126 +77,137 @@ const PlayingAreas = () => {
   }, []);
 
   return (
-    <Box
-      sx={{
-        width: '500px',
-        height: '500px',
-        borderRadius: '50%',
-        backgroundColor: 'green',
-        position: 'relative',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin: 'auto',
-        boxShadow: '0 0 20px rgba(0,0,0,0.2)',
-        overflow: 'hidden',
-        marginTop: 10,
-      }}
-    >
-      {loading ? (
-        <Box
-          position="absolute"
-          top="25%"
-          left="25%"
-          transform="translate(-50%, -50%)"
-          bgcolor="white"
-          p={2}
-          borderRadius={2}
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Box>
+        <Typography
+          variant="h5"
+          align="center"
+          sx={{
+            marginY: "30px", fontWeight: "bold", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+          }}
         >
-          <Lottie
-            options={{
-              animationData: loaderAnimation,
-              loop: true,
-              autoplay: true,
-              speed: 10,
-            }}
-            height={100}
-            width={100}
-          />
-          <Typography variant="h6" align="center">
-            Loading Areas...
-          </Typography>
-        </Box>
-      ) : (
-        <>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '50%',
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: '500',
-                fontFamily:
-                  'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-                textAlign: 'center',
-              }}
-              color="white"
-            >
-              Off Side <br /> {offSidePercentage}%
-            </Typography>
-            <Typography
-              variant="h6"
-              color="white"
-              sx={{
-                fontWeight: '500',
-                fontFamily:
-                  'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-                textAlign: 'center',
-              }}
-              align="right"
-            >
-              Leg Side <br /> {legSidePercentage}%
-            </Typography>
-          </Box>
-
-          {sectors.map((sector, index) => {
-        const angle = index * 45 - 90; // Start from top
-        const radius = '220px';
-
-        return (
-          <React.Fragment key={sector}>
-            <Box
-              sx={{
-                position: 'absolute',
-                width: '1px',
-                height: '500px',
-                backgroundColor: 'white',
-                transform: `rotate(${angle}deg)`,
-                transformOrigin: 'center',
-              }}
-            />
-            <Typography
-              sx={{
-                position: 'absolute',
-                transform: `rotate(${angle + 22.5}deg) translate(${parseInt(radius) * 0.6}px) rotate(-${
-                  angle + 22.5
-                }deg)`,
-                fontWeight: 'bold',
-                color: 'white',
-                fontSize: '11px',
-              }}
-            >
-              {sector}
-            </Typography>
-          </React.Fragment>
-        );
-      })}
-
+          Playing Areas
+        </Typography>
+      </Box>
       <Box
         sx={{
-          width: '20px',
-          height: '100px',
-          backgroundColor: '#c3aa25',
-          position: 'absolute',
-          transform: 'rotate(0deg)',
+          width: '500px',
+          height: '500px',
+          borderRadius: '50%',
+          backgroundColor: 'green',
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          margin: 'auto',
+          boxShadow: '0 0 20px rgba(0,0,0,0.2)',
+          overflow: 'hidden',
         }}
-      />
-        </>
-      )}
+      >
+        {loading ? (
+          <Box
+            position="absolute"
+            top="25%"
+            left="25%"
+            transform="translate(-50%, -50%)"
+            bgcolor="white"
+            p={2}
+            borderRadius={2}
+          >
+            <Lottie
+              options={{
+                animationData: loaderAnimation,
+                loop: true,
+                autoplay: true,
+                speed: 10,
+              }}
+              height={100}
+              width={100}
+            />
+            <Typography variant="h6" align="center">
+              Loading Areas...
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '50%',
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: '500',
+                  fontFamily:
+                    'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                  textAlign: 'center',
+                }}
+                color="white"
+              >
+                Off Side <br /> {offSidePercentage}%
+              </Typography>
+              <Typography
+                variant="h6"
+                color="white"
+                sx={{
+                  fontWeight: '500',
+                  fontFamily:
+                    'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                  textAlign: 'center',
+                }}
+                align="right"
+              >
+                Leg Side <br /> {legSidePercentage}%
+              </Typography>
+            </Box>
+
+            {sectors.map((sector, index) => {
+              const angle = index * 45 - 90; // Start from top
+              const radius = '220px';
+
+              return (
+                <React.Fragment key={sector}>
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      width: '1px',
+                      height: '500px',
+                      backgroundColor: 'white',
+                      transform: `rotate(${angle}deg)`,
+                      transformOrigin: 'center',
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      position: 'absolute',
+                      transform: `rotate(${angle + 22.5}deg) translate(${parseInt(radius) * 0.6}px) rotate(-${angle + 22.5
+                        }deg)`,
+                      fontWeight: 'bold',
+                      color: 'white',
+                      fontSize: '11px',
+                    }}
+                  >
+                    {sector}
+                  </Typography>
+                </React.Fragment>
+              );
+            })}
+
+            <Box
+              sx={{
+                width: '20px',
+                height: '100px',
+                backgroundColor: '#c3aa25',
+                position: 'absolute',
+                transform: 'rotate(0deg)',
+              }}
+            />
+          </>
+        )}
+      </Box>
     </Box>
   );
 };

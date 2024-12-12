@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Grid, Paper, Typography, Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { WidthFull } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const plans = [
   {
@@ -53,6 +54,11 @@ const plans = [
 // });
 
 const PaymentGateway = () => {
+  const navigate = useNavigate();
+
+  const handleRoute = () => {
+    navigate("/paymentForm")
+  }
   return (
     <Box sx={{ padding: 4, minHeight: '100vh' }}>
       <Typography variant="h4" align="center" sx={{
@@ -98,7 +104,7 @@ const PaymentGateway = () => {
               <Typography variant="body1" sx={{ marginBottom: 2 }}>
                 {plan.period}
               </Typography>
-              <Button variant="contained" sx={{ marginBottom: 2, backgroundColor: plan.highlighted ? '#FFFFFF' : '#030947', color: plan.highlighted ? '#030947' : '#FFFFFF' }}>
+              <Button onClick={handleRoute} variant="contained" sx={{ marginBottom: 2, backgroundColor: plan.highlighted ? '#FFFFFF' : '#030947', color: plan.highlighted ? '#030947' : '#FFFFFF' }}>
                 {plan.buttonText}
 
               </Button>

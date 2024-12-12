@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUser, updateUser, deleteUser, getUserShots, saveShotsData, getUsername, saveChatMessage, getChatHistory  } = require('../controllers/userController');
+const { getUser, updateUser, deleteUser, getUserShots, saveShotsData, getUsername, saveChatMessage, getChatHistory, getShotsByDate  } = require('../controllers/userController');
 
 // Get user by email
 router.get('/', getUser);
@@ -23,5 +23,9 @@ router.get('/username', getUsername);
 //Save users chat with AI Assistant
 router.post('/saveChatMessage', saveChatMessage);
 router.get('/chatHistory', getChatHistory);
+
+router.get('/getshotsbydate', getShotsByDate);
+
+
 
 module.exports = router;

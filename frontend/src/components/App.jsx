@@ -7,6 +7,7 @@ import Dashboard from './Dashboard';
 import ForgotPassword from './ForgetPassword';
 import ResetPassword from "./ResetPassword";
 import NotFound from './PageNotFound';
+import PaymentForm from "./PaymentForm";
 
 const PrivateRoute = ({ element }) => {
   const userEmail = localStorage.getItem("userEmail");
@@ -44,6 +45,8 @@ const App = () => {
           /> */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+          <Route path="/paymentForm" element={<PaymentForm />} />
 
           <Route path="404" element={<NotFound />} /> 
           <Route path="*" element={<Navigate to={userEmail ? "/dashboard" : "/404"} />} />
