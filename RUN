@@ -1,0 +1,14 @@
+total 276
+drwxrwxr-x  7 octaloop octaloop   4096 دسمبر  17 12:46 .
+drwxr-x--- 40 octaloop octaloop   4096 دسمبر  16 11:40 ..
+drwxrwxr-x  8 octaloop octaloop   4096 دسمبر  12 13:06 backend
+drwxrwxr-x  2 octaloop octaloop   4096 دسمبر  16 11:18 docker
+-rw-rw-r--  1 octaloop octaloop    256 دسمبر  16 11:57 docker-compose.yml
+drwxrwxr-x  7 octaloop octaloop   4096 دسمبر  17 12:28 frontend
+drwxrwxr-x  8 octaloop octaloop   4096 دسمبر  17 12:16 .git
+drwxrwxr-x  3 octaloop octaloop   4096 دسمبر  16 10:40 .github
+-rw-rw-r--  1 octaloop octaloop     14 نومبر  20 10:09 .gitignore
+-rw-rw-r--  1 octaloop octaloop   1225 دسمبر   1 23:05 package.json
+-rw-rw-r--  1 octaloop octaloop 233251 دسمبر   1 23:05 package-lock.json
+-rw-rw-r--  1 octaloop octaloop   4367 دسمبر  17 12:15 README.md
+-rw-rw-r--  1 octaloop octaloop      0 دسمبر  17 12:46 RUN

@@ -4,6 +4,6 @@ const { uploadVideo, getLastVideoAnalysis } = require('../controllers/videoContr
 
 // Submit feedback
 router.post('/upload-video', uploadVideo);
-router.post('/last-analysis', getLastVideoAnalysis);
+router.get('/last-analysis', getLastVideoAnalysis);
 
 module.exports = router;

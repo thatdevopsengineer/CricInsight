@@ -1,0 +1,59 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      # Build Docker Images
+      - name: Build Frontend Docker Image
+        run: docker build -t daoudhussaindev/frontend:latest -f docker/frontend.Dockerfile .
+
+      - name: Build Backend Docker Image
+        run: docker build -t daoudhussaindev/backend:latest -f docker/backend.Dockerfile .
+
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Push Docker Images
+      - name: Push Frontend Docker Image
+        run: docker push daoudhussaindev/frontend:latest
+
+      - name: Push Backend Docker Image
+        run: docker push daoudhussaindev/backend:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # Install Docker Compose
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+          
+      # Pull and deploy images using Docker Compose
+      - name: Pull Images
+        run: |
+          docker pull daoudhussaindev/frontend:latest
+          docker pull daoudhussaindev/backend:latest
+
+      - name: Run Services
+        run: |
+          docker-compose up -d

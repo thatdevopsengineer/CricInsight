@@ -9,7 +9,7 @@ Cricket players, especially amateurs, lack access to expert coaching and insight
 ## ✨ Features
 
 - **Video Insights:** Upload and edit your practice videos.
-- **Shot Classification:** Detects shots from practice videos and classifies that into predefined types using AI models.
+- **Shots Classification:** Detects shots from practice videos and classifies that into predefined types using AI models.
 - **Area Calculation:** Calculates playing areas in a wagon wheel.
 - **Data Visualization:** Visual representation of shot statistics and distribution.
 - **Adaptive Learning:** Detects flaws in player's technique and suggests improvements.
@@ -66,7 +66,7 @@ Cricket players, especially amateurs, lack access to expert coaching and insight
 git clone https://github.com/Daoud-Hussain/CricInsight.git
 ```
 
- <h3> Step 2: Frontend
+<h3> Step 2: Frontend
 
 1. Open terminal & go to `cd frontend`
 
@@ -76,7 +76,7 @@ git clone https://github.com/Daoud-Hussain/CricInsight.git
 
 4. Click on `http://localhost:5173/`
 
- <h3> Step 3: Backend
+<h3> Step 3: Backend
 
 1. Open terminal & go to `cd backend` 
 
@@ -94,7 +94,7 @@ If you'd like to contribute to this project, please open an issue or submit a pu
 
 Don' forget to star the repo if you liked it.
 
-Connect me on <a href="https://daoudhussain.netlify.app/" target="_blank">LinkedIn</a> and <a href="https://medium.com/@dev.daoudhussain" target="_blank">Medium</a>  <br>
+Connect me on <a href="https://www.linkedin.com/in/daoud-hussain/" target="_blank">LinkedIn</a> and <a href="https://medium.com/@dev.daoudhussain" target="_blank">Medium</a>  <br>
 
 ## Contributers
 <a href = "https://daoudhussain.netlify.app/">
