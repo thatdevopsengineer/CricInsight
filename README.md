@@ -92,7 +92,7 @@ Congratulation 🎉 you have setup the environment successfully
 ## Contributing
 If you'd like to contribute to this project, please open an issue or submit a pull request. 
 
-Don' forget to star the repo if you liked it.
+Don' forget to star ⭐ the repo, if you liked it. 
 
 Connect me on <a href="https://www.linkedin.com/in/daoud-hussain/" target="_blank">LinkedIn</a> and <a href="https://medium.com/@dev.daoudhussain" target="_blank">Medium</a>  <br>
 
