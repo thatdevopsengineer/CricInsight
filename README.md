@@ -89,7 +89,7 @@ git clone https://github.com/Daoud-Hussain/CricInsight.git
 3. Run the command `npm start` or `nodemon server.js` to start live server on database
 
 
-Congratulation 🎉 you have setup the environment successfully
+Congratulation 🎉 you have setup the environment successfully.
 
 
 
