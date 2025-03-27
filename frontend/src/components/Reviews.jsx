@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField, Radio, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { setProfileData } from "../../../backend/profileSlice";
+import { setProfileData } from "../../profileSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

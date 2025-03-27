@@ -415,7 +415,6 @@ const AIAssistant = () => {
           </Typography>
         )}
       </Box>
-      84137165849-n5rpca9u1cfmerfb7um368peoc94doq5.apps.googleusercontent.com"
       <Box sx={{ position: "fixed", textAlign: 'center',bottom: 0, width: '58%', pb: 2 }}>
         <TextField
           fullWidth

@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import validator from 'validator';
 import { useSelector, useDispatch } from 'react-redux';
-import { setProfileData, clearProfileData } from '../../../backend/profileSlice';
+import { setProfileData, clearProfileData } from '../../profileSlice';
 
 const theme = createTheme({
   typography: {
