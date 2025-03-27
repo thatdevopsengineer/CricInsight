@@ -72,7 +72,7 @@ const Footer = () => {
             <motion.div variants={footerVariants}>
               <Box>
                 <img
-                  src="./assets/home-logo.png"
+                  src="/home-logo.png"
                   alt="CricInsight Logo"
                   style={{ width: 250 }}
                 />

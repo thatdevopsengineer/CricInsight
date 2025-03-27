@@ -72,7 +72,7 @@ export default function LandingPage() {
       <CssBaseline />
       <AppAppBar />
       <Box id="home">
-        <HomeSection imageSrc="./assets/home-image.png" />
+        <HomeSection imageSrc="/home-image.png" />
       </Box>
       <Box id="experience">
         <Experience />

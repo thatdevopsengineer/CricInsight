@@ -235,7 +235,7 @@ const AIAssistant = () => {
             How can I help you today?
           </Typography>
         </Box>
-        <img src="../../assets/Transparent-logo.png" alt="Logo" height={160} />
+        <img src="./Transparent-logo.png" alt="Logo" height={160} />
       </Box>
 
 

@@ -77,7 +77,7 @@ const Dashboard = () => {
       >
         <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
           <img
-            src="../../assets/home-logo.png"
+            src="/home-logo.png"
             alt="Logo"
             style={{ width: "80%", maxWidth: 160 }}
           />
