@@ -24,11 +24,11 @@ const AIAssistant = () => {
       if (email) {
         try {
           // Fetch username
-          const userResponse = await axios.get(`https://cric-insight-blush.vercel.app/api/user/username?email=${email}`);
+          const userResponse = await axios.get(`https://cricinsight-backend.vercel.app/api/user/username?email=${email}`);
           setUserName(userResponse.data.firstName);
 
           // Fetch chat history
-          const historyResponse = await axios.get(`https://cric-insight-blush.vercel.app/api/user/chatHistory?email=${email}`);
+          const historyResponse = await axios.get(`https://cricinsight-backend.vercel.app/api/user/chatHistory?email=${email}`);
           setMessages(historyResponse.data);
           
           // Hide samples if there's chat history
@@ -99,7 +99,7 @@ const AIAssistant = () => {
     
     try {
       // Save user message to backend
-      await axios.post("https://cric-insight-blush.vercel.app/api/user/saveChatMessage", {
+      await axios.post("https://cricinsight-backend.vercel.app/api/user/saveChatMessage", {
         email,
         message: userMessage
       });
@@ -144,7 +144,7 @@ const AIAssistant = () => {
         };
   
         // Save AI response to backend
-        await axios.post("https://cric-insight-blush.vercel.app/api/user/saveChatMessage", {
+        await axios.post("https://cricinsight-backend.vercel.app/api/user/saveChatMessage", {
           email,
           message: aiResponse
         });
@@ -167,7 +167,7 @@ const AIAssistant = () => {
         };
         
         // Save error response to backend
-        await axios.post("https://cric-insight-blush.vercel.app/api/user/saveChatMessage", {
+        await axios.post("https://cricinsight-backend.vercel.app/api/user/saveChatMessage", {
           email,
           message: errorResponse
         });
@@ -182,7 +182,7 @@ const AIAssistant = () => {
       };
 
       // Save error response to backend
-      await axios.post("https://cric-insight-blush.vercel.app/api/user/saveChatMessage", {
+      await axios.post("https://cricinsight-backend.vercel.app/api/user/saveChatMessage", {
         email,
         message: errorResponse
       });

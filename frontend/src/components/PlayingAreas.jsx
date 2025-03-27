@@ -26,7 +26,7 @@ const PlayingAreas = () => {
   useEffect(() => {
     const fetchAreaPercentages = async () => {
       try {
-        const response = await axios.get('https://cric-insight-blush.vercel.app/api/video/last-analysis');
+        const response = await axios.get('https://cricinsight-backend.vercel.app/api/video/last-analysis');
         if (response.data && response.data.ShotPercentages) {
           const shotPercentages = response.data.ShotPercentages;
 

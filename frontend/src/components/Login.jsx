@@ -34,7 +34,7 @@ const Login = () => {
     setLoading(true);
 
     axios
-      .post("https://cric-insight-blush.vercel.app/api/auth/login", { email, password }) 
+      .post("https://cricinsight-backend.vercel.app/api/auth/login", { email, password }) 
       .then((result) => {
         setLoading(false);
         if (result.data.message === "Login successful") {
@@ -57,13 +57,13 @@ const Login = () => {
 
   const handleFacebookLogin = () => {
     // Redirect to Facebook login endpoint
-    window.location.href = 'https://cric-insight-blush.vercel.app/api/auth/facebook';
+    window.location.href = 'https://cricinsight-backend.vercel.app/api/auth/facebook';
   };
 
   const onSuccess = (response) => {
     const googleToken = response.credential;
 
-    axios.post('https://cric-insight-blush.vercel.app/api/auth/google-login', { token: googleToken }) // Updated endpoint
+    axios.post('https://cricinsight-backend.vercel.app/api/auth/google-login', { token: googleToken }) // Updated endpoint
       .then((res) => {
         const userEmail = res.data.email;
         localStorage.setItem('userEmail', userEmail);

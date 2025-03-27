@@ -38,7 +38,7 @@ const ResetPassword = () => {
 
     try {
       const response = await axios.post(
-        `https://cric-insight-blush.vercel.app/reset-password/${token}`, 
+        `https://cricinsight-backend.vercel.app/reset-password/${token}`, 
         { newPassword }
       );
       

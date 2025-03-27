@@ -97,7 +97,7 @@ const Register = () => {
     setLoading(true);
 
     axios
-      .post("https://cric-insight-blush.vercel.app/api/auth/register", {
+      .post("https://cricinsight-backend.vercel.app/api/auth/register", {
         firstName,
         lastName,
         email,
