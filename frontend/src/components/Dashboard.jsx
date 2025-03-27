@@ -25,7 +25,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (email) {
       axios
-        .get(`http://localhost:3001/api/user/username?email=${email}`)
+        .get(`https://cric-insight-blush.vercel.app/api/user/username?email=${email}`)
         .then((response) => {
           setUserName(response.data.firstName);
         })

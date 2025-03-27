@@ -36,7 +36,7 @@ const ProfileEdit = () => {
     const userEmail = localStorage.getItem("userEmail");
     if (userEmail) {
       axios
-        .get(`http://localhost:3001/api/user?email=${userEmail}`)
+        .get(`https://cric-insight-blush.vercel.app/api/user?email=${userEmail}`)
         .then((response) => {
           const { email, name, password } = response.data;
           const [firstName, lastName] = name.split(" ");
@@ -102,7 +102,7 @@ const ProfileEdit = () => {
     }
   
     axios
-      .post("http://localhost:3001/api/user/updateUser", updatedData)
+      .post("https://cric-insight-blush.vercel.app/api/user/updateUser", updatedData)
       .then((response) => {
         console.log("Profile updated successfully:", response.data);
         toast.success("Profile updated successfully!");
@@ -121,7 +121,7 @@ const ProfileEdit = () => {
   const handleDelete = () => {
     setOpen(false);
     axios
-      .delete(`http://localhost:3001/api/user/deleteUser?email=${profileData.email}`)
+      .delete(`https://cric-insight-blush.vercel.app/api/user/deleteUser?email=${profileData.email}`)
       .then((response) => {
         console.log('Profile deleted successfully:', response.data);
         toast.success('Profile deleted successfully!', {});

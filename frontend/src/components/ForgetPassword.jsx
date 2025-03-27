@@ -24,7 +24,7 @@ const ForgetPassword = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3001/forgot-password', { email });
+      const response = await axios.post('https://cric-insight-blush.vercel.app/forgot-password', { email });
       
       toast.success(response.data.message);
       

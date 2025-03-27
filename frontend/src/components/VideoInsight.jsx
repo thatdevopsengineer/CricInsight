@@ -79,7 +79,7 @@ const VideoEditor = () => {
 
   async function runModelOnEC2() {
     try {
-      const response = await axios.post('http://localhost:3001/api/model/execute');
+      const response = await axios.post('https://cric-insight-blush.vercel.app/api/model/execute');
       console.log('runn')
       toast.success('Video Processed successfully ');
     } catch (error) {
@@ -227,7 +227,7 @@ const VideoEditor = () => {
       const videoUrls = await Promise.all(uploadPromises);
 
       // Save video URLs to backend
-      const backendResponse = await axios.post("http://localhost:3001/api/video/upload-video", {
+      const backendResponse = await axios.post("https://cric-insight-blush.vercel.app/api/video/upload-video", {
         email: userEmail,
         videos: videoUrls.map((url) => ({
           url,

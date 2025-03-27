@@ -147,7 +147,7 @@ exports.googleLogin = async (req, res) => {
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_APP_ID,
   clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL: "http://localhost:3001/api/auth/facebook/callback",
+  callbackURL: "https://cric-insight-blush.vercel.app/api/auth/facebook/callback",
   profileFields: ['id', 'displayName', 'emails']
 },
 async (accessToken, refreshToken, profile, done) => {

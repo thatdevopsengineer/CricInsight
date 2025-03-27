@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 //   server: {
 //     proxy: {
 //       '/api': {
-//         target: 'http://localhost:3001',
+//         target: 'https://cric-insight-blush.vercel.app',
 //         changeOrigin: true,
 //       }
 //     }

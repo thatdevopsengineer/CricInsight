@@ -97,7 +97,7 @@ const Register = () => {
     setLoading(true);
 
     axios
-      .post("http://localhost:3001/api/auth/register", {
+      .post("https://cric-insight-blush.vercel.app/api/auth/register", {
         firstName,
         lastName,
         email,

@@ -31,7 +31,7 @@ const Visualization = () => {
 
     try {
       const response = await axios.get(
-        "http://localhost:3001/api/video/last-analysis"
+        "https://cric-insight-blush.vercel.app/api/video/last-analysis"
       );
       if (response.data && response.data.ShotPercentages) {
         const updatedData = Object.entries(response.data.ShotPercentages).map(
@@ -73,7 +73,7 @@ const Visualization = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/user/getshots?email=${email}`
+        `https://cric-insight-blush.vercel.app/api/user/getshots?email=${email}`
       );
       setDates(response.data);
     } catch (error) {
@@ -89,7 +89,7 @@ const Visualization = () => {
     try {
       const email = localStorage.getItem("userEmail");
       const response = await axios.get(
-        `http://localhost:3001/api/user/getshotsbydate?email=${email}&date=${date}`
+        `https://cric-insight-blush.vercel.app/api/user/getshotsbydate?email=${email}&date=${date}`
       );
       const { shots } = response.data;
       const updatedData = shots.map((shot) => ({
@@ -141,7 +141,7 @@ const Visualization = () => {
         shots: updatedShots,
       };
 
-      await axios.post("http://localhost:3001/api/user/saveshots", updatedShotsData);
+      await axios.post("https://cric-insight-blush.vercel.app/api/user/saveshots", updatedShotsData);
       toast.success("Data Saved Successfully!");
     } catch (error) {
       console.error("Error saving shots data:", error);

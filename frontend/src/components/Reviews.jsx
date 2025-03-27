@@ -43,7 +43,7 @@ const FeedbackForm = () => {
     const userEmail = localStorage.getItem("userEmail");
     if (userEmail) {
       axios
-        .get(`http://localhost:3001/api/user?email=${userEmail}`)
+        .get(`https://cric-insight-blush.vercel.app/api/user?email=${userEmail}`)
         .then((response) => {
           const { email, name } = response.data;
           setFormData(prev => ({
@@ -116,7 +116,7 @@ const FeedbackForm = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/api/feedback/submit-feedback', formData);
+      const response = await axios.post('https://cric-insight-blush.vercel.app/api/feedback/submit-feedback', formData);
 
       toast.success(response.data.message || "Feedback submitted successfully!");
 
