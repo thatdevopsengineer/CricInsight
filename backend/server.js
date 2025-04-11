@@ -12,7 +12,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173', // Keep local development
+    'https://cricinsight-frontend.vercel.app', // Add production domain
+  ],
   credentials: true
 }));
 
