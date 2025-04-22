@@ -1,7 +1,7 @@
+// PaymentGateway.jsx
 import React from 'react';
 import { Box, Grid, Paper, Typography, Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
-import { WidthFull } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const plans = [
@@ -48,17 +48,23 @@ const plans = [
     highlighted: false
   }
 ];
+
 const PaymentGateway = () => {
   const navigate = useNavigate();
 
-  const handleRoute = () => {
-    navigate("/paymentForm")
-  }
+  const handleRoute = (price, title) => {
+    const numericPrice = parseFloat(price.replace('$', '')); // remove $ and convert to number
+    navigate("/paymentForm", {
+      state: {
+        amount: numericPrice,
+        planName: title,
+      }
+    });
+  };
+
   return (
     <Box sx={{ padding: 4, minHeight: '100vh' }}>
-      <Typography variant="h4" align="center" sx={{
-        fontWeight: '600', px: 10, marginBottom: 3, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-      }}>
+      <Typography variant="h4" align="center" sx={{ fontWeight: '600', marginBottom: 3 }}>
         Identify technique flaws and get tailored improvement plans.
       </Typography>
       <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
@@ -75,6 +81,7 @@ const PaymentGateway = () => {
           <Typography>Cancel Anytime</Typography>
         </Box>
       </Box>
+
       <Grid container spacing={3} justifyContent="center">
         {plans.map((plan, index) => (
           <Grid item xs={12} md={4} key={index}>
@@ -85,7 +92,7 @@ const PaymentGateway = () => {
                 backgroundColor: plan.highlighted ? '#030947' : '#FFFFFF',
                 color: plan.highlighted ? '#FFFFFF' : '#000000',
               }}
-              elevation="4"
+              elevation={4}
             >
               <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
                 {plan.title}
@@ -96,19 +103,24 @@ const PaymentGateway = () => {
               <Typography variant="body1" sx={{ marginBottom: 2 }}>
                 {plan.period}
               </Typography>
-              <Button onClick={handleRoute} variant="contained" sx={{ marginBottom: 2, backgroundColor: plan.highlighted ? '#FFFFFF' : '#030947', color: plan.highlighted ? '#030947' : '#FFFFFF' }}>
+              <Button
+                onClick={() => handleRoute(plan.price, plan.title)}
+                variant="contained"
+                sx={{
+                  marginBottom: 2,
+                  backgroundColor: plan.highlighted ? '#FFFFFF' : '#030947',
+                  color: plan.highlighted ? '#030947' : '#FFFFFF'
+                }}
+              >
                 {plan.buttonText}
-
               </Button>
 
               <hr />
               {plan.features.map((feature, i) => (
                 <Typography variant="body2" sx={{ marginBottom: 1 }} key={i}>
-
                   {feature}
                 </Typography>
               ))}
-
             </Paper>
           </Grid>
         ))}

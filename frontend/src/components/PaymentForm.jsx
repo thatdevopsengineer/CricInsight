@@ -177,7 +177,7 @@ const options = {
     name: "StarStudent",
   },
   mode: "payment",
-  amount: 100,
+  amount: 29,
   currency: "usd",
   appearance: {
     theme: "stripe",
@@ -196,7 +196,7 @@ const options = {
 
 const PaymentForm = () => {
   const { state } = useLocation();
-  let amount = 100;
+  let amount = 29;
 
   options.amount = amount;
 

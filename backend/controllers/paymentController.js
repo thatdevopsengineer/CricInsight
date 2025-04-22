@@ -32,18 +32,46 @@ const checkoutSession = async (req, res) => {
 };
 
 // Create a Stripe payment intent
+// const createPaymentIntent = async (req, res) => {
+//   try {
+//     const { amount } = req.body;
+
+//     if (!amount) {
+//       throw new Error("Payment amount is required.");
+//     }
+
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount,
+//       currency: "usd",
+//       description: "Your payment description here",
+//       automatic_payment_methods: {
+//         enabled: true,
+//       },
+//     });
+
+//     res.json({
+//       client_secret: paymentIntent.client_secret,
+//       amount: paymentIntent.amount,
+//     });
+//   } catch (error) {
+//     console.error("Error creating payment intent:", error.message);
+//     res.status(400).json({ error: error.message });
+//   }
+// };
+
 const createPaymentIntent = async (req, res) => {
   try {
+    console.log("Received body:", req.body);
     const { amount } = req.body;
 
-    if (!amount) {
-      throw new Error("Payment amount is required.");
+    if (!amount || typeof amount !== 'number') {
+      return res.status(400).json({ error: "Payment amount is required and must be a number." });
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: "usd",
-      description: "Your payment description here",
+      description: "StarStudent payment",
       automatic_payment_methods: {
         enabled: true,
       },
@@ -58,6 +86,7 @@ const createPaymentIntent = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 module.exports = {
   checkoutSession,
